@@ -1,0 +1,23 @@
+<head>
+    <title>Annie's Thesis</title>
+</head>
+<body>
+    <h1>Annie's Thesis</h1>
+    {{> classroomlayout }}
+
+</body>
+
+<template name="classroomlayout">
+    Choose a Classroom
+    <select class="classroomdropdown">
+            <option>Choose a Classroom...</option>
+        {{#each class}}
+            <option value="{{room}}">{{room}}</option>
+        {{/each}}
+    </select>
+    <br />    
+    This is working, probably. <br />
+    {{#if selectedClass}}
+        {{createTable}}
+    {{/if}}
+</template>
