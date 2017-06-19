@@ -31,10 +31,13 @@ if(Meteor.isClient){
                         // code += "<TD></TD>";
                         var newCell = newRow.insertCell(j);
                         console.log("insertcell called");
-                        var newText = document.createTextNode('New Row');
-                        newCell.appendChild(newText);
-                        if(j == (cur.cols / cur.aisles)){
-                            newCell.colSpan = 2;
+                        // var newText = document.createTextNode('New Row');
+                        // newCell.appendChild(newText);
+                        if(j == (cur.cols / (cur.aisles+1))){
+                            // console.log("insert aisle div");
+                            newCell.innerHTML = "<div class='aisle'>aisle</div>";
+                        }else{
+                            newCell.innerHTML = "<div class='seat'>seat</div>";
                         }
                     }
                     // code += "</TR>";
