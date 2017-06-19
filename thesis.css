@@ -3,12 +3,12 @@
     border-spacing: 5px;
 }
 #myTable td {
-    border: 1px solid black;
+    border: 5px solid black;
     width: 50px;
     height: 50px;
 }
 #myTable td:hover {
-    background-color: #f5f5f5;
+    background-color: #e6e6e6;
 }
 .aisle {
     background-color: black;
