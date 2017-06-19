@@ -33,6 +33,9 @@ if(Meteor.isClient){
                         console.log("insertcell called");
                         var newText = document.createTextNode('New Row');
                         newCell.appendChild(newText);
+                        if(j == (cur.cols / cur.aisles)){
+                            newCell.colSpan = 2;
+                        }
                     }
                     // code += "</TR>";
                 }
