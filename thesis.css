@@ -1,0 +1,15 @@
+#myTable {
+    width: 100%;
+}
+td {
+    border: 1px solid black;
+    padding-bottom: 33%;
+    width: 33%;
+    height: 0;
+    position: relative;
+}
+td:after {
+    content: '';
+    display: block;
+    margin-top: 100%;
+}

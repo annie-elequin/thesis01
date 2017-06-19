@@ -10,14 +10,16 @@
 <template name="classroomlayout">
     Choose a Classroom
     <select class="classroomdropdown">
-            <option>Choose a Classroom...</option>
+            <option value="">Choose a Classroom...</option>
         {{#each class}}
             <option value="{{room}}">{{room}}</option>
         {{/each}}
     </select>
     <br />    
     This is working, probably. <br />
+    <table id="myTable"></table>
+
     {{#if selectedClass}}
-        {{createTable}}
+        {{createTable}}        
     {{/if}}
 </template>
