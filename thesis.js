@@ -18,38 +18,33 @@ if(Meteor.isClient){
             console.log("createTable called");
             var temp = Session.get('selectedClass');
             var cur = ClassList.findOne({ room: temp });
-            // var code = "";
-            // var code = "<TABLE>";
             var table = document.getElementById('myTable');
             if(table){
                 table.innerHTML = "";
                 for(i=0;i<cur.rows;i++){
-                    // code += "<TR>";
                     var newRow = table.insertRow(i);
-                    console.log("insertrow called");
+                    // console.log("insertrow called");
                     for(j=0;j<cur.cols+cur.aisles;j++){
-                        // code += "<TD></TD>";
                         var newCell = newRow.insertCell(j);
-                        console.log("insertcell called");
+                        // console.log("insertcell called");
                         // var newText = document.createTextNode('New Row');
                         // newCell.appendChild(newText);
-                        if(j == (cur.cols / (cur.aisles+1))){
-                            // console.log("insert aisle div");
+                        var numSeats = (cur.cols / (cur.aisles+1))+1;
+                        if((j+1)%numSeats == 0){
+                            console.log(j+1);
+                            console.log("cols/aisles what="+numSeats);
                             newCell.innerHTML = "<div class='aisle'>aisle</div>";
+                            newCell.style.background = "black";
+                            newCell.style.width = "18px";
                         }else{
                             newCell.innerHTML = "<div class='seat'>seat</div>";
                         }
                     }
-                    // code += "</TR>";
                 }
             }
             else{
                 console.log("There was no myTable");
             }
-            // code += "</TABLE>";
-            // console.log(code);
-            // document.getElementById("mytable").innerHTML = code;
-            return "wat";
         }
     });
 
