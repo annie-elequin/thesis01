@@ -3,28 +3,39 @@
 </head>
 <body>
     <h1>Annie's Thesis</h1>
+    <p>{{> loginButtons }}</p>
     {{> chooseclassroom }}
     {{> classroomlayout }}
 
 </body>
 
 <template name="chooseclassroom">
-    Choose a Classroom
-    <select class="classroomdropdown">
-            <option value="">Choose a Classroom...</option>
-        {{#each class}}
-            <option value="{{room}}">{{room}}</option>
-        {{/each}}
-    </select>
+    {{#if currentUser}}
+        Choose a Classroom
+        <select class="classroomdropdown">
+                <option value="">Choose a Classroom...</option>
+            {{#each class}}
+                <option value="{{room}}">{{room}}</option>
+            {{/each}}
+        </select>
+    {{/if}}
 </template>
 
 <template name="classroomlayout">
-    This is working, probably. <br /><br />
-    <table id="myTable"></table>
-    <br />
+    <!--both professors and students will see this-->
+    {{#if currentUser}}
+        {{setActive}}
+        <!--this code is for creating the table for the class-->
+        This is working, probably. <br /><br />
+        <table id="myTable"></table>
+        <br />
 
-    {{#if selectedClass}}
-        {{createTable}}        
+        {{#if selectedClass}}
+            {{createTable}}        
+        {{/if}}
+        <!--end createTable-->
+    {{else}}
+        You must be logged-in to see this content.
     {{/if}}
 </template>
 
@@ -42,6 +53,13 @@
     - name
     - role    (prof, student)
     - status  (active, inactive)
+    - _id
+
+    Seats
+    - IP address
+    - student ID
+    - row
+    - col
     - _id
 
     CourseList
