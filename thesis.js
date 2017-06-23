@@ -1,4 +1,5 @@
 ClassList = new Mongo.Collection('classrooms');
+CourseList = new Mongo.Collection('courses');
 
 if(Meteor.isClient){
     Meteor.subscribe('theClasses');

@@ -3,11 +3,12 @@
 </head>
 <body>
     <h1>Annie's Thesis</h1>
+    {{> chooseclassroom }}
     {{> classroomlayout }}
 
 </body>
 
-<template name="classroomlayout">
+<template name="chooseclassroom">
     Choose a Classroom
     <select class="classroomdropdown">
             <option value="">Choose a Classroom...</option>
@@ -15,7 +16,9 @@
             <option value="{{room}}">{{room}}</option>
         {{/each}}
     </select>
-    <br />    
+</template>
+
+<template name="classroomlayout">
     This is working, probably. <br /><br />
     <table id="myTable"></table>
     <br />
