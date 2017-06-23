@@ -18,23 +18,43 @@ if(Meteor.isClient){
     Template.classroomlayout.helpers({
         'setActive': function(){
             console.log("setActive");
-            var curUser = Meteor.userId();
-            // UserList.update({ ID: curUser},
-            //                 { $set: 
-            //                     { status: "active" }});
-            var myUser = UserList.findOne({ ID: curUser });
-            // myUser.status = "active";
-            console.log(myUser);
-            // console.log(thisrole);
+            var usrID = Meteor.userId();
+            var curUser = UserList.findOne({ ID: usrID });
+            curUser.status = "active";
         },
         'selectedClass': function(){
             var selectedClass = Session.get('selectedClass');
             console.log("we are in selectedClass, so "+selectedClass);
             return ClassList.findOne({ room: selectedClass });
         },
-        // 'isStudent': function(){
-        //     var 
-        // },
+        'isStudent': function(){
+            console.log("isStudent");
+            var usrID = Meteor.userId();
+            var curUser = UserList.findOne({ ID: usrID });
+            if(curUser.role == "stud"){
+                var curSeat = SeatList.findOne({ studID: usrID });
+                console.log(curSeat);
+                var table = document.getElementById('myTable');
+                console.log("got the table");
+                if(table){
+                    var curRow = table.rows[curSeat.row-1];
+                    console.log("row: "+curRow);
+                    var ndx=1, i=0;
+                    while(ndx != curSeat.col){
+                        console.log("inside while, col: "+curSeat.col);
+                        if(curRow.cells.item(i).innerHTML == "seat"){
+                            ndx++;
+                            console.log("checking innerhtml");
+                        }
+                        console.log(curRow.cells[i].innerHTML);
+                        i++;
+                    }
+                    console.log("finished the while loop");
+                    curRow.cells.item(i).style.border = "8px solid greenyellow";
+                    console.log("i: "+i);
+                }
+            }
+        },
         'createTable': function(){
             console.log("createTable called");
             var temp = Session.get('selectedClass');
@@ -54,11 +74,11 @@ if(Meteor.isClient){
                         if((j+1)%numSeats == 0){
                             // console.log(j+1);
                             // console.log("cols/aisles what="+numSeats);
-                            newCell.innerHTML = "<div class='aisle'>aisle</div>";
+                            newCell.innerHTML = "aisle";
                             newCell.style.background = "black";
-                            newCell.style.width = "18px";
+                            newCell.style.color = "white";
                         }else{
-                            newCell.innerHTML = "<div class='seat'>seat</div>";
+                            newCell.innerHTML = "seat";
                         }
                     }
                 }

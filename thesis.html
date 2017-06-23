@@ -31,9 +31,13 @@
         <br />
 
         {{#if selectedClass}}
-            {{createTable}}        
+            {{createTable}} 
+
+            <!--this function will set the student's seat as "active"-->
+            {{isStudent}}       
         {{/if}}
         <!--end createTable-->
+
     {{else}}
         You must be logged-in to see this content.
     {{/if}}
