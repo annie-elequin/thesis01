@@ -3,11 +3,17 @@
 </head>
 <body>
     <h1>Annie's Thesis</h1>
-    <p>{{> loginButtons }}</p>
+    <p>{{> loginButtons }} <span style="float:right;">{{> statusbuttons}}</span></p>
     {{> chooseclassroom }}
     {{> classroomlayout }}
-
+    {{> questions }}
 </body>
+
+<template name="statusbuttons">
+    <button class="bad">Bad</button>
+    <button class="meh">Meh</button>
+    <button class="good">Good</button>
+</template>
 
 <template name="chooseclassroom">
     {{#if currentUser}}
@@ -41,6 +47,10 @@
     {{else}}
         You must be logged-in to see this content.
     {{/if}}
+</template>
+
+<template name="questions">
+    Enter a Question: <input type="text" width="300px"/>
 </template>
 
 <!--

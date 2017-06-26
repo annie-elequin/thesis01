@@ -21,6 +21,13 @@ if(Meteor.isClient){
             var usrID = Meteor.userId();
             var curUser = UserList.findOne({ ID: usrID });
             curUser.status = "active";
+
+            // set sessions for this user
+            // set user
+            Session.set('curUser', curUser.ID);
+            // set seat
+            var curSeat = SeatList.findOne({ studID: usrID });
+            Session.set('curSeat', curSeat._id);
         },
         'selectedClass': function(){
             var selectedClass = Session.get('selectedClass');
@@ -33,25 +40,24 @@ if(Meteor.isClient){
             var curUser = UserList.findOne({ ID: usrID });
             if(curUser.role == "stud"){
                 var curSeat = SeatList.findOne({ studID: usrID });
-                console.log(curSeat);
+                // console.log(curSeat);
                 var table = document.getElementById('myTable');
-                console.log("got the table");
+                // console.log("got the table");
                 if(table){
                     var curRow = table.rows[curSeat.row-1];
-                    console.log("row: "+curRow);
+                    // console.log("row: "+curRow);
                     var ndx=1, i=0;
                     while(ndx != curSeat.col){
-                        console.log("inside while, col: "+curSeat.col);
+                        // console.log("inside while, col: "+curSeat.col);
                         if(curRow.cells.item(i).innerHTML == "seat"){
                             ndx++;
-                            console.log("checking innerhtml");
                         }
-                        console.log(curRow.cells[i].innerHTML);
+                        // console.log(curRow.cells[i].innerHTML);
                         i++;
                     }
-                    console.log("finished the while loop");
-                    curRow.cells.item(i).style.border = "8px solid greenyellow";
-                    console.log("i: "+i);
+                    // console.log("finished the while loop");
+                    curRow.cells.item(i).style.border = "8px solid green";
+                    // console.log("i: "+i);
                 }
             }
         },
@@ -88,6 +94,30 @@ if(Meteor.isClient){
             }
         }
     });
+
+    Template.statusbuttons.events({
+        'click .good': function(event){
+            console.log("good");
+            var seatID = Session.get('curSeat');
+            var mySeat = SeatList.findOne({ _id: seatID });
+            var table = document.getElementById("myTable");
+            table.rows[mySeat.row-1].cells[mySeat.col].style.border = "8px solid green";
+        },
+        'click .meh': function(event){
+            console.log("meh");
+            var seatID = Session.get('curSeat');
+            var mySeat = SeatList.findOne({ _id: seatID });
+            var table = document.getElementById("myTable");
+            table.rows[mySeat.row-1].cells[mySeat.col].style.border = "8px solid yellow";
+        },
+        'click .bad': function(event){
+            console.log("bad");
+            var seatID = Session.get('curSeat');
+            var mySeat = SeatList.findOne({ _id: seatID });
+            var table = document.getElementById("myTable");
+            table.rows[mySeat.row-1].cells[mySeat.col].style.border = "8px solid red";
+        }
+    })
 
     Template.chooseclassroom.events({
         'change .classroomdropdown': function(event){

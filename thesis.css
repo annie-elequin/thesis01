@@ -11,13 +11,6 @@
 #myTable td:hover {
     background-color: #e6e6e6;
 }
-.aisle {
-    color: white;
-    text-align: center;
-}
-.seat {
-    text-align: center;
-}
 .activeseat {
     border: 8px solid green;
 }
