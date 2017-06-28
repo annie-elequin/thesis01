@@ -1,10 +1,9 @@
 <head>
-    <title>Annie's Thesis</title>
+    <title>Lecture</title>
 </head>
 <body>
-    <h1>Annie's Thesis</h1>
-    <p>{{> loginButtons }} <span style="float:right;">{{> statusbuttons}}</span></p>
-    {{> chooseclassroom }}
+    <h1>Welcome, Student!</h1>
+    <p><span style="float:left;">{{> statusbuttons}}</span></p>
     {{> classroomlayout }}
     {{> questions }}
 </body>
@@ -15,42 +14,65 @@
     <button class="good">Good</button>
 </template>
 
-<template name="chooseclassroom">
-    {{#if currentUser}}
-        Choose a Classroom
-        <select class="classroomdropdown">
-                <option value="">Choose a Classroom...</option>
-            {{#each class}}
-                <option value="{{room}}">{{room}}</option>
-            {{/each}}
-        </select>
-    {{/if}}
-</template>
-
 <template name="classroomlayout">
     <!--both professors and students will see this-->
-    {{#if currentUser}}
         {{setActive}}
         <!--this code is for creating the table for the class-->
-        This is working, probably. <br /><br />
-        <table id="myTable"></table>
+        <table id="classroom">
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="aisle"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="aisle"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="aisle"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="aisle"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="aisle"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="aisle"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
         <br />
-
-        {{#if selectedClass}}
-            {{createTable}} 
-
-            <!--this function will set the student's seat as "active"-->
-            {{isStudent}}       
-        {{/if}}
-        <!--end createTable-->
-
-    {{else}}
-        You must be logged-in to see this content.
-    {{/if}}
 </template>
 
 <template name="questions">
-    Enter a Question: <input type="text" width="300px"/>
+    Enter a Question: <input type="text" width="400px"/>
 </template>
 
 <!--
