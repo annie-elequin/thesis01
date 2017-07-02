@@ -8,10 +8,18 @@ if(Meteor.isClient){
         'setActive': function(){
             console.log("setActive");
             
+            var curIP = "33.33.000.00";
+            // later, we'll get the actual IP address
+
             // set seat session
-            var curSeat = SeatList.findOne({ studID: usrID });
-            Session.set('curSeat', curSeat._id);
-        }
+            var curSeat = SeatList.findOne({ IP: curIP });
+            console.log("found the current seat");
+            curSeat.status = "active";
+            console.log(curSeat._id);
+            console.log("set the status");
+            Session.set('selectedSeat', curSeat._id);
+            console.log("set the session");
+        },
         // 'isStudent': function(){
         //     console.log("isStudent");
         //     var usrID = Meteor.userId();
@@ -71,6 +79,53 @@ if(Meteor.isClient){
         //         console.log("There was no myTable");
         //     }
         // }
+        'fromsection11': function(){
+            console.log("section1-1");
+            return SeatList.find({ row: 1, col: { $lt: 5 }});
+        },
+        'fromsection12': function(){
+            console.log("section1-2");
+            return SeatList.find({ row: 1, col: { $gt: 4, $lt: 9 }});
+        },
+        'fromsection13': function(){
+            console.log("section1-3");
+            return SeatList.find({ row: 1, col: { $gt: 8, $lt: 13 }});
+        },
+        'fromsection21': function(){
+            return SeatList.find({ row: 2, col: { $gt: 12, $lt: 17 }});
+        },
+        'fromsection22': function(){
+            return SeatList.find({ row: 2, col: { $gt: 16, $lt: 21 }});
+        },
+        'fromsection23': function(){
+            return SeatList.find({ row: 2, col: { $gt: 20, $lt: 25 }});
+        },
+        'fromsection31': function(){
+            return SeatList.find({ row: 3, col: { $gt: 24, $lt: 29 }});
+        },
+        'fromsection32': function(){
+            return SeatList.find({ row: 3, col: { $gt: 28, $lt: 33 }});
+        },
+        'fromsection33': function(){
+            return SeatList.find({ row: 3, col: { $gt: 32 }});
+        },
+        'status': function(){
+            var curSeatID = this._id;
+            console.log("cur seat id: "+this._id);
+            var curSeat = SeatList.findOne({ _id: curSeatID });
+
+            if(curSeat.status == "inactive"){
+                return;
+            }else if(curSeat.status == "active"){
+                return "active";
+            }else if(curSeat.status == "bad"){
+                return "bad";
+            }else if(curSeat.status == "meh"){
+                return "meh";
+            }else if(curSeat.status == "good"){
+                return "good";
+            }
+        }
     });
 
     Template.statusbuttons.events({

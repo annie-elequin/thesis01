@@ -21,52 +21,43 @@
         <br /><br />
         <table id="classroom">
             <tr>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
+                {{#each fromsection11}}
+                    <td class="seat {{status}}"></td>
+                {{/each}}
                 <td class="aisle"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
+                {{#each fromsection12}}
+                    <td class="seat {{status}}"></td>
+                {{/each}}
                 <td class="aisle"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
+                {{#each fromsection13}}
+                    <td class="seat {{status}}"></td>
+                {{/each}}
             </tr>
             <tr>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
+                {{#each fromsection21}}
+                    <td class="seat {{status}}"></td>
+                {{/each}}
                 <td class="aisle"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
+                {{#each fromsection22}}
+                    <td class="seat {{status}}"></td>
+                {{/each}}
                 <td class="aisle"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
+                {{#each fromsection23}}
+                    <td class="seat {{status}}"></td>
+                {{/each}}
             </tr>
             <tr>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
+                {{#each fromsection31}}
+                    <td class="seat {{status}}"></td>
+                {{/each}}
                 <td class="aisle"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
+                {{#each fromsection32}}
+                    <td class="seat {{status}}"></td>
+                {{/each}}
                 <td class="aisle"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
-                <td class="seat"></td>
+                {{#each fromsection33}}
+                    <td class="seat {{status}}"></td>
+                {{/each}}
             </tr>
         </table>
         <br />
@@ -75,35 +66,4 @@
 <template name="questions">
     Enter a Question: <input type="text" width="400px"/>
 </template>
-
-<!--
-    DATABASE INFORMATION
-
-    ClassList
-    - room
-    - rows
-    - cols
-    - aisles
-    - _id
-
-    UserList
-    - name
-    - role    (prof, student)
-    - status  (active, inactive)
-    - _id
-
-    Seats
-    - IP address
-    - student ID
-    - row
-    - col
-    - _id
-
-    CourseList
-    - course name
-    - prof name
-    - room
-    - _id
-
--->
 

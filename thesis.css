@@ -1,16 +1,29 @@
 #classroom {
-    /*width: 100%;*/
     border-spacing: 5px;
 }
 #classroom td {
-    border: 8px solid black;
     text-align: center;
     width: 50px;
     height: 50px;
 }
 #classroom td:hover {
-    background-color: #e6e6e6;
+    /*background-color: #8f9ba3;*/
+}
+.seat {
+    background-color: #54585a;
 }
 .aisle {
     background-color: black;
+}
+.active {
+    background-color: #cacdce;
+}
+.bad {
+    background-color: #ff0000;
+}
+.meh {
+    background-color: #ffcc00;
+}
+.good {
+    background-color: #33cc33;
 }
