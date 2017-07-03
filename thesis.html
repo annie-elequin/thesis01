@@ -1,7 +1,7 @@
 <head>
     <title>Lecture</title>
 </head>
-<body>
+<body onunload="{{setInactive}}">
     <h1>Welcome, Student!</h1>
     <p><span style="float:left;">{{> statusbuttons}}</span></p>
     {{> classroomlayout }}
@@ -21,42 +21,27 @@
         <br /><br />
         <table id="classroom">
             <tr>
-                {{#each fromsection11}}
-                    <td class="seat {{status}}"></td>
-                {{/each}}
-                <td class="aisle"></td>
-                {{#each fromsection12}}
-                    <td class="seat {{status}}"></td>
-                {{/each}}
-                <td class="aisle"></td>
-                {{#each fromsection13}}
-                    <td class="seat {{status}}"></td>
+                {{#each rowone}}
+                    {{#if aisle}}
+                        <td class="aisle">{{col}}</td>
+                    {{/if}}
+                    <td class="seat {{derp}}">{{col}}</td>
                 {{/each}}
             </tr>
             <tr>
-                {{#each fromsection21}}
-                    <td class="seat {{status}}"></td>
-                {{/each}}
-                <td class="aisle"></td>
-                {{#each fromsection22}}
-                    <td class="seat {{status}}"></td>
-                {{/each}}
-                <td class="aisle"></td>
-                {{#each fromsection23}}
-                    <td class="seat {{status}}"></td>
+                {{#each rowtwo}}
+                    {{#if aisle}}
+                        <td class="aisle">{{col}}</td>
+                    {{/if}}
+                    <td class="seat {{derp}}">{{col}}</td>
                 {{/each}}
             </tr>
             <tr>
-                {{#each fromsection31}}
-                    <td class="seat {{status}}"></td>
-                {{/each}}
-                <td class="aisle"></td>
-                {{#each fromsection32}}
-                    <td class="seat {{status}}"></td>
-                {{/each}}
-                <td class="aisle"></td>
-                {{#each fromsection33}}
-                    <td class="seat {{status}}"></td>
+                {{#each rowthree}}
+                    {{#if aisle}}
+                        <td class="aisle">{{col}}</td>
+                    {{/if}}
+                    <td class="seat {{derp}}">{{col}}</td>
                 {{/each}}
             </tr>
         </table>
