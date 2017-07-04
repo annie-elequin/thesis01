@@ -1,7 +1,7 @@
 <head>
     <title>Lecture</title>
 </head>
-<body onunload="{{setInactive}}">
+<body>
     <h1>Welcome, Student!</h1>
     <p><span style="float:left;">{{> statusbuttons}}</span></p>
     {{> classroomlayout }}
@@ -25,15 +25,15 @@
                     {{#if aisle}}
                         <td class="aisle">{{col}}</td>
                     {{/if}}
-                    <td class="seat {{derp}}">{{col}}</td>
+                    <td class="seat {{seatstatus}}">{{col}}</td>
                 {{/each}}
             </tr>
             <tr>
                 {{#each rowtwo}}
                     {{#if aisle}}
                         <td class="aisle">{{col}}</td>
-                    {{/if}}
-                    <td class="seat {{derp}}">{{col}}</td>
+                    {{/if}} 
+                    <td class="seat {{seatstatus}}">{{col}}</td>
                 {{/each}}
             </tr>
             <tr>
@@ -41,7 +41,7 @@
                     {{#if aisle}}
                         <td class="aisle">{{col}}</td>
                     {{/if}}
-                    <td class="seat {{derp}}">{{col}}</td>
+                    <td class="seat {{seatstatus}}">{{col}}</td>
                 {{/each}}
             </tr>
         </table>

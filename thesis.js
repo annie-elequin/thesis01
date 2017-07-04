@@ -3,12 +3,21 @@ SeatList = new Mongo.Collection('seats');
 if(Meteor.isClient){
     Meteor.subscribe('theClasses');
 
+    window.onunload = function(){
+        console.log("setInactive");
+        var curSeatID = Session.get('selectedSeat');
+        console.log(curSeatID);
+        SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
+        var thing = SeatList.findOne({ _id: curSeatID }).status;
+        console.log(thing);
+    }
+
     // HELPER functions for the CLASSROOM LAYOUT
     Template.classroomlayout.helpers({
         'setActive': function(){
             console.log("setActive");
             
-            var curIP = "33.33.000.00";
+            var curIP = "129.62.150.32";
             // later, we'll get the actual IP address
 
             // set seat session
@@ -16,17 +25,15 @@ if(Meteor.isClient){
             if(curSeat){
                 console.log("found the current seat "+curSeat._id);
                 SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
-                console.log(curSeat);
-                console.log("set the status");
                 Session.set('selectedSeat', curSeat._id);
-                console.log("set the session");
             }
         },
-        'setInactive': function(){
-            console.log("setInactive");
-            var curSeatID = Session.get('selectedSeat');
-            SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
-        },
+        // 'setInactive': function(){
+        //     console.log("setInactive");
+        //     var curSeatID = Session.get('selectedSeat');
+        //     console.log(curSeatID);
+        //     SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
+        // },
         // 'isStudent': function(){
         //     console.log("isStudent");
         //     var usrID = Meteor.userId();
@@ -134,22 +141,24 @@ if(Meteor.isClient){
         'rowthree': function(){
             return SeatList.find({ row: 3 });
         },
-        'derp': function(){
-            console.log("status");
-            // var curSeatID = this._id;
-            // // var curSeat = SeatList.findOne({ _id: curSeatID });
+        'seatstatus': function(){
+            console.log("seatstatus");
+            var curSeatID = this._id;
+            var curSeat = SeatList.findOne({ _id: curSeatID });
 
-            // if(curSeat.status == "inactive"){
-            //     return;
-            // }else if(curSeat.status == "active"){
-            //     return "active";
-            // }else if(curSeat.status == "bad"){
-            //     return "bad";
-            // }else if(curSeat.status == "meh"){
-            //     return "meh";
-            // }else if(curSeat.status == "good"){
-            //     return "good";
-            // }
+            if(curSeat){
+                if(curSeat.status == "inactive"){
+                    return;
+                }else if(curSeat.status == "active"){
+                    return "active";
+                }else if(curSeat.status == "bad"){
+                    return "bad";
+                }else if(curSeat.status == "meh"){
+                    return "meh";
+                }else if(curSeat.status == "good"){
+                    return "good";
+                }
+            }
         },
         
     });
