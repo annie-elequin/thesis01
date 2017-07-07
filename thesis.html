@@ -16,7 +16,9 @@
 
 <template name="classroomlayout">
     <!--both professors and students will see this-->
-        {{setActive}}
+        <!--{{#if seatInactive}}
+            {{setActive}}
+        {{/if}}-->
         <!--this code is for creating the table for the class-->
         <br /><br />
         <table id="classroom">
@@ -44,6 +46,53 @@
                     <td class="seat {{seatstatus}}">{{col}}</td>
                 {{/each}}
             </tr>
+
+
+            <!--<tr>
+                <td class="seat {{seatstatus}}">1</td>
+                <td class="seat {{seatstatus}}">2</td>
+                <td class="seat {{seatstatus}}">3</td>
+                <td class="seat {{seatstatus}}">4</td>
+                <td class="seat {{seatstatus}}">5</td>
+                <td class="seat {{seatstatus}}">6</td>
+                <td class="seat {{seatstatus}}">7</td>
+                <td class="seat {{seatstatus}}">8</td>
+                <td class="seat {{seatstatus}}">9</td>
+                <td class="seat {{seatstatus}}">10</td>
+                <td class="seat {{seatstatus}}">11</td>
+                <td class="seat {{seatstatus}}">12</td>
+            </tr>
+            <tr>
+                <td class="seat {{seatstatus}}">13</td>
+                <td class="seat {{seatstatus}}">14</td>
+                <td class="seat {{seatstatus}}">15</td>
+                <td class="seat {{seatstatus}}">16</td>
+                <td class="seat {{seatstatus}}">17</td>
+                <td class="seat {{seatstatus}}">18</td>
+                <td class="seat {{seatstatus}}">19</td>
+                <td class="seat {{seatstatus}}">20</td>
+                <td class="seat {{seatstatus}}">21</td>
+                <td class="seat {{seatstatus}}">22</td>
+                <td class="seat {{seatstatus}}">23</td>
+                <td class="seat {{seatstatus}}">24</td>
+
+            </tr>
+            <tr>
+                <td class="seat {{seatstatus}}">25</td>
+                <td class="seat {{seatstatus}}">26</td>
+                <td class="seat {{seatstatus}}">27</td>
+                <td class="seat {{seatstatus}}">28</td>
+                <td class="seat {{seatstatus}}">29</td>
+                <td class="seat {{seatstatus}}">30</td>
+                <td class="seat {{seatstatus}}">31</td>
+                <td class="seat {{seatstatus}}">32</td>
+                <td class="seat {{seatstatus}}">33</td>
+                <td class="seat {{seatstatus}}">34</td>
+                <td class="seat {{seatstatus}}">35</td>
+                <td class="seat {{seatstatus}}">36</td>
+            </tr>-->
+
+
         </table>
         <br />
 </template>
@@ -51,4 +100,18 @@
 <template name="questions">
     Enter a Question: <input type="text" width="400px"/>
 </template>
+
+<!--Database Information
+
+SeatList
+- IP
+- status
+- row
+- col
+- _id
+
+Questions
+- 
+
+-->
 
