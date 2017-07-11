@@ -5,74 +5,95 @@ console.log("seatlist");
 if(Meteor.isClient){
     Meteor.subscribe('theClasses');
 
-    window.onload = function(){
-        console.log("setActive");
+    // window.onload = function(){
+    //     console.log("setActive");
         
-        var curIP = "129.62.150.32";
-        // later, we'll get the actual IP address
-        // $.getJSON('//ipapi.co/json/', function(data) {
-        //     console.log(JSON.stringify(data, null, 2));
-        // });
+    //     var curIP = "129.62.150.32";
+    //     // later, we'll get the actual IP address
+    //     // $.getJSON('//ipapi.co/json/', function(data) {
+    //     //     console.log(JSON.stringify(data, null, 2));
+    //     // });
 
 
-        // set seat session
-        var curSeat = SeatList.findOne({ IP: curIP });
-        if(curSeat){
-            console.log("found the current seat "+curSeat._id);
-            SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
-            Session.set('selectedSeat', curSeat._id);
-        }
-    }
+    //     // set seat session
+    //     var curSeat = SeatList.findOne({ IP: curIP });
+    //     console.log(SeatList);
+    //     if(curSeat){
+    //         console.log("found the current seat "+curSeat._id);
+    //         SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
+    //         Session.set('selectedSeat', curSeat._id);
+    //     }
+    // }
 
-    window.onunload = function(){
-        console.log("setInactive");
-        var curSeatID = Session.get('selectedSeat');
-        console.log(curSeatID);
-        SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
-        var thing = SeatList.findOne({ _id: curSeatID }).status;
-        console.log(thing);
-    }
+    // window.onunload = function(){
+    //     console.log("setInactive");
+    //     var curSeatID = Session.get('selectedSeat');
+    //     console.log(curSeatID);
+    //     SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
+    //     var thing = SeatList.findOne({ _id: curSeatID }).status;
+    //     console.log(thing);
+    // }
+
+    // function setActive(){
+    //     console.log("setactive");
+    // }
+
+    // function setInactive(){
+    //     console.log("setinactive");
+    // }
 
     // HELPER functions for the CLASSROOM LAYOUT
     Template.classroomlayout.helpers({
-        // 'seatInactive': function(){
-        //     console.log("is it inactive?");
-        //     var seatID = Session.get('selectedSeat');
-        //     var stat = SeatList.findOne({ _id: seatID }).status;
-        //     if(stat == "inactive"){
-        //         console.log("its inactive");
-        //         return true;
-        //     }else{
-        //         console.log("nah");
-        //         return false;
-        //     }
-        // },
-        // 'setInactive': function(){
-        //     console.log("setInactive");
-        //     var curSeatID = Session.get('selectedSeat');
-        //     console.log(curSeatID);
-        //     SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
-        //     var thing = SeatList.findOne({ _id: curSeatID }).status;
-        //     console.log(thing);
-        // },
-        // 'setActive': function(){
-        //     console.log("setActive");
+        'setInactive': function(){
+            console.log("setInactive");
+            var curSeatID = Session.get('selectedSeat');
+            console.log(curSeatID);
+            SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
+            var thing = SeatList.findOne({ _id: curSeatID }).status;
+            console.log(thing);
+        },
+        'setActive': function(){
+            console.log("setActive");
             
-        //     var curIP = "129.62.150.32";
-        //     // later, we'll get the actual IP address
-        //     // $.getJSON('//ipapi.co/json/', function(data) {
-        //     //     console.log(JSON.stringify(data, null, 2));
-        //     // });
+            var curIP = "129.62.150.32";
+            // later, we'll get the actual IP address
+            // $.getJSON('//ipapi.co/json/', function(data) {
+            //     console.log(JSON.stringify(data, null, 2));
+            // });
 
 
-        //     // set seat session
-        //     var curSeat = SeatList.findOne({ IP: curIP });
-        //     if(curSeat){
-        //         console.log("found the current seat "+curSeat._id);
-        //         SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
-        //         Session.set('selectedSeat', curSeat._id);
-        //     }
-        // },
+            // set seat session
+            var curSeat = SeatList.findOne({ IP: curIP });
+            if(curSeat){
+                console.log("found the current seat "+curSeat._id);
+                SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
+                Session.set('selectedSeat', curSeat._id);
+            }else{
+                console.log("there was no seat to find");
+            }
+        },
+        'seatInactive': function(){
+            console.log("is it inactive?");
+            var seatID = Session.get('selectedSeat');
+            // var stat = SeatList.findOne({ _id: seatID }).status;
+            // if(stat == "inactive"){
+            //     console.log("its inactive");
+            //     return true;
+            // }else{
+            //     console.log("nah");
+            //     return false;
+            // }
+            if(seatID){
+                console.log("yes");
+                console.log(seatID);
+                return false;
+            }else{
+                console.log("no");
+                console.log(seatID);
+                // setActive();
+                return true;
+            }
+        },
         'aisle': function(){
             var col = SeatList.findOne({ _id: this._id }).col;
             if(col){
