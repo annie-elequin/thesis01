@@ -98,7 +98,18 @@
 </template>
 
 <template name="questions">
-    Enter a Question: <input type="text" width="400px"/>
+
+    <div id="questioncontainer">
+        {{#each question}}
+            <div id="inquiry">
+            </div>
+        {{/each}}
+    </div>
+    <br />
+    <form>
+        Enter a Question: <input type="text" style="width: 400px;" name="question"/>
+        <input type="submit" value="Submit" />
+    </form>
 </template>
 
 
@@ -112,7 +123,11 @@ SeatList
 - _id
 
 Questions
-- 
+- ID
+- timestamp///////
+- IP
+- score
+- status
 
 -->
 

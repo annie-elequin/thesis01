@@ -34,6 +34,16 @@ if(Meteor.isClient){
     //     console.log(thing);
     // }
 
+    window.onbeforeunload = function(){
+        console.log("setInactive");
+        // var curSeatID = Session.get('selectedSeat');
+        // console.log(curSeatID);
+        // SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
+        // var thing = SeatList.findOne({ _id: curSeatID }).status;
+        // console.log(thing);
+        // setInactive();
+    }
+
     // function setActive(){
     //     console.log("setactive");
     // }
@@ -57,9 +67,9 @@ if(Meteor.isClient){
             
             var curIP = "129.62.150.32";
             // later, we'll get the actual IP address
-            // $.getJSON('//ipapi.co/json/', function(data) {
-            //     console.log(JSON.stringify(data, null, 2));
-            // });
+            $.getJSON('//ipapi.co/json/', function(data) {
+                console.log(JSON.stringify(data, null, 2));
+            });
 
 
             // set seat session
@@ -73,24 +83,10 @@ if(Meteor.isClient){
             }
         },
         'seatInactive': function(){
-            console.log("is it inactive?");
             var seatID = Session.get('selectedSeat');
-            // var stat = SeatList.findOne({ _id: seatID }).status;
-            // if(stat == "inactive"){
-            //     console.log("its inactive");
-            //     return true;
-            // }else{
-            //     console.log("nah");
-            //     return false;
-            // }
             if(seatID){
-                console.log("yes");
-                console.log(seatID);
                 return false;
             }else{
-                console.log("no");
-                console.log(seatID);
-                // setActive();
                 return true;
             }
         },
@@ -156,7 +152,15 @@ if(Meteor.isClient){
         }
     })
 
-    Template.classroomlayout.events({
+    Template.questions.events({
+        'submit form': function(event){
+            event.preventDefault();
+            var question = event.target.question.value;
+            console.log("your question is: "+question);
+            
+            // create a Meteor function here to insert the question
 
+            event.target.question.value = "";
+        }
     });
 }

@@ -9,6 +9,16 @@
 #classroom td:hover {
     /*background-color: #8f9ba3;*/
 }
+#questioncontainer {
+    border: 2px solid black;
+    clear: right;
+    margin: 10px;
+    width: 90%;
+    height: 300px; 
+}
+#inquiry {
+    border: 1px solid red;
+}
 .seat {
     background-color: #54585a;
 }
