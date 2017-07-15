@@ -102,10 +102,12 @@
     <div id="questioncontainer">
         {{#each question}}
             <div id="inquiry">
+                {{content}}
             </div>
         {{/each}}
     </div>
     <br />
+    
     <form>
         Enter a Question: <input type="text" style="width: 400px;" name="question"/>
         <input type="submit" value="Submit" />

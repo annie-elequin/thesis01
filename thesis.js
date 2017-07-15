@@ -1,6 +1,5 @@
-console.log("no seatlist");
 SeatList = new Mongo.Collection('seats');
-console.log("seatlist");
+Questions = new Mongo.Collection('questions');
 
 if(Meteor.isClient){
     Meteor.subscribe('theClasses');
@@ -111,7 +110,7 @@ if(Meteor.isClient){
             return SeatList.find({ row: 3 });
         },
         'seatstatus': function(){
-            console.log("seatstatus");
+            // console.log("seatstatus");
             var curSeatID = this._id;
             var curSeat = SeatList.findOne({ _id: curSeatID });
 
@@ -151,6 +150,12 @@ if(Meteor.isClient){
             SeatList.update({ _id: seatID }, { $set: {status: "bad"} });
         }
     })
+
+    Template.questions.helpers({
+        'question': function(){
+            return Questions.find().fetch();
+        }
+    });
 
     Template.questions.events({
         'submit form': function(event){

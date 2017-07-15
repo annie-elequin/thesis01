@@ -12,12 +12,13 @@
 #questioncontainer {
     border: 2px solid black;
     clear: right;
-    margin: 10px;
     width: 90%;
     height: 300px; 
 }
 #inquiry {
     border: 1px solid red;
+    margin: 6px; 
+    padding: 2px;
 }
 .seat {
     background-color: #54585a;
