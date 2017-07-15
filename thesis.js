@@ -64,7 +64,7 @@ if(Meteor.isClient){
         'setActive': function(){
             console.log("setActive");
             
-            var curIP = "129.62.150.32";
+            var curIP = "129.62.150.10";
             // later, we'll get the actual IP address
             $.getJSON('//ipapi.co/json/', function(data) {
                 console.log(JSON.stringify(data, null, 2));
@@ -116,17 +116,6 @@ if(Meteor.isClient){
 
             if(curSeat){
                 return curSeat.status;
-                // if(curSeat.status == "inactive"){
-                //     return;
-                // }else if(curSeat.status == "active"){
-                //     return "active";
-                // }else if(curSeat.status == "bad"){
-                //     return "bad";
-                // }else if(curSeat.status == "meh"){
-                //     return "meh";
-                // }else if(curSeat.status == "good"){
-                //     return "good";
-                // }
             }
         },
         
@@ -153,7 +142,20 @@ if(Meteor.isClient){
 
     Template.questions.helpers({
         'question': function(){
-            return Questions.find().fetch();
+            return Questions.find({}, { sort: {score:-1} });
+        },
+        'professor': function(){
+            console.log("is this the prof?");
+            var seatID = Session.get('selectedSeat');
+            if(seatID){
+                var curSeat = SeatList.findOne({ _id: seatID});
+                console.log(curSeat);
+                if(curSeat.IP == "129.62.150.10"){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
         }
     });
 

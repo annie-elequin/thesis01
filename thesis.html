@@ -99,19 +99,30 @@
 
 <template name="questions">
 
-    <div id="questioncontainer">
-        {{#each question}}
-            <div id="inquiry">
-                {{content}}
-            </div>
-        {{/each}}
-    </div>
-    <br />
-    
     <form>
         Enter a Question: <input type="text" style="width: 400px;" name="question"/>
         <input type="submit" value="Submit" />
     </form>
+
+    <div id="questioncontainer">
+        {{#each question}}
+            <div id="inquiry">
+                <div id="vote">
+                    <span class="up {{voted}}">↑</span>
+                    <span class="down {{voted}}">↓</span>
+                </div>
+                <div id="questioncontent">
+                    {{content}}
+                </div>
+                {{#if professor}}
+                    <div id="activebut">X</div>
+                {{/if}}
+            </div>
+        {{/each}}
+    </div>
+    <br />
+
+    
 </template>
 
 
