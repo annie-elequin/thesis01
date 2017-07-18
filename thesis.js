@@ -4,6 +4,10 @@ Questions = new Mongo.Collection('questions');
 if(Meteor.isClient){
     Meteor.subscribe('theClasses');
 
+    // hidequestion = function(){
+    //         console.log("hide the question");
+    // }
+
     // window.onload = function(){
     //     console.log("setActive");
         
@@ -142,7 +146,9 @@ if(Meteor.isClient){
 
     Template.questions.helpers({
         'question': function(){
-            return Questions.find({}, { sort: {score:-1} });
+            var today = new Date();
+            today.setHours(8,0,0,0);
+            return Questions.find({ status: "active", date: {$gt: today} }, { sort: {score:-1} });
         },
         'professor': function(){
             console.log("is this the prof?");
@@ -156,6 +162,12 @@ if(Meteor.isClient){
                     return false;
                 }
             }
+        },
+        'votedup': function(){
+            console.log("upupupupupup");
+        },
+        'voteddown': function(){
+            console.log("downdowndowndowndown");
         }
     });
 
@@ -164,10 +176,69 @@ if(Meteor.isClient){
             event.preventDefault();
             var question = event.target.question.value;
             console.log("your question is: "+question);
-            
-            // create a Meteor function here to insert the question
-
+            var seatID = Session.get('selectedSeat');
+            if(seatID){
+                var curSeat = SeatList.findOne
+                var d = new Date();
+                // create a Meteor function here to insert the question
+                Questions.insert({ IP: curSeat.IP, content: question,
+                    score: 0, status: "active", date: d });
+            }
             event.target.question.value = "";
+        },
+        'click .activebut': function(){
+            console.log("hide the question");
+            Questions.update({ _id: this._id }, { $set: {status:"inactive"} });
+        },
+        // NOT FINISHED
+        'click .up': function(){
+            console.log("voted up " + this._id);
+            var upsesh = Session.get("up"+this._id);
+            console.log("upsesh: "+upsesh);
+            if(!upsesh){
+                // "up" has not been clicked
+                var downsesh = Session.get("down"+this._id);
+                if(downsesh){
+                    console.log(downsesh);
+                    // down HAS been clicked
+                    delete Session.keys["down"+this._id];
+                    console.log("down sesh deleted");
+
+                    Questions.update({ _id: this._id }, { $inc: {score:2}});
+                }else{
+                    Questions.update({ _id: this._id }, { $inc: {score:1} });                     
+                }
+                Session.set("up"+this._id, "upvote");
+                console.log("up sesh set");  
+            }
         }
+        // // NOT FINISHED
+        // 'click .down': function(){
+        //     console.log("voted down " + this._id);
+        //     var downsesh = Session.get("down"+this._id);
+        //     if(!downsesh){
+        //         // "down" has not been clicked for this one
+        //         var upsesh = Session.get("up"+this._id);
+        //         if(upsesh){
+        //             // up HAS been clicked
+        //             delete Session.keys["up"+this._id];
+        //             console.log("up sesh deleted");
+
+        //             Questions.update({ _id: this._id }, { $})
+        //         }
+        //         Session.set("down"+this._id);
+        //         console.log("down sesh set");
+        //     }
+        // }
+        // 'click #questioncontent': function(){
+        //     console.log("clicked questionnnnnn");
+        //     console.log("month: "+this.date.getMonth()+1);
+        //     console.log("year: "+this.date.getFullYear());
+        //     console.log("day: "+this.date.getDate());
+        //     console.log("date: "+this.date.toString());
+        //     var d = new Date();
+        //     console.log(d.toString());
+        //     console.log(d.toDateString());
+        // }
     });
 }

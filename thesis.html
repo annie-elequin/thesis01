@@ -100,22 +100,22 @@
 <template name="questions">
 
     <form>
-        Enter a Question: <input type="text" style="width: 400px;" name="question"/>
-        <input type="submit" value="Submit" />
+        Enter a Question: <input type="text" style="width: 60%;" name="question"/>
+        <input type="submit" value="Submit" style="display: inline;"/>
     </form>
 
     <div id="questioncontainer">
         {{#each question}}
             <div id="inquiry">
                 <div id="vote">
-                    <span class="up {{voted}}">↑</span>
-                    <span class="down {{voted}}">↓</span>
+                    <span class="up {{votedup}}">↑</span>
+                    <span class="down {{voteddown}}">↓</span>
                 </div>
                 <div id="questioncontent">
                     {{content}}
                 </div>
                 {{#if professor}}
-                    <div id="activebut">X</div>
+                    <div class="activebut">X</div>
                 {{/if}}
             </div>
         {{/each}}
