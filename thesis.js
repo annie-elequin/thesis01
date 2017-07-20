@@ -4,39 +4,6 @@ Questions = new Mongo.Collection('questions');
 if(Meteor.isClient){
     Meteor.subscribe('theClasses');
 
-    // hidequestion = function(){
-    //         console.log("hide the question");
-    // }
-
-    // window.onload = function(){
-    //     console.log("setActive");
-        
-    //     var curIP = "129.62.150.32";
-    //     // later, we'll get the actual IP address
-    //     // $.getJSON('//ipapi.co/json/', function(data) {
-    //     //     console.log(JSON.stringify(data, null, 2));
-    //     // });
-
-
-    //     // set seat session
-    //     var curSeat = SeatList.findOne({ IP: curIP });
-    //     console.log(SeatList);
-    //     if(curSeat){
-    //         console.log("found the current seat "+curSeat._id);
-    //         SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
-    //         Session.set('selectedSeat', curSeat._id);
-    //     }
-    // }
-
-    // window.onunload = function(){
-    //     console.log("setInactive");
-    //     var curSeatID = Session.get('selectedSeat');
-    //     console.log(curSeatID);
-    //     SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
-    //     var thing = SeatList.findOne({ _id: curSeatID }).status;
-    //     console.log(thing);
-    // }
-
     window.onbeforeunload = function(){
         console.log("setInactive");
         // var curSeatID = Session.get('selectedSeat');
@@ -46,14 +13,6 @@ if(Meteor.isClient){
         // console.log(thing);
         // setInactive();
     }
-
-    // function setActive(){
-    //     console.log("setactive");
-    // }
-
-    // function setInactive(){
-    //     console.log("setinactive");
-    // }
 
     // HELPER functions for the CLASSROOM LAYOUT
     Template.classroomlayout.helpers({
@@ -121,8 +80,7 @@ if(Meteor.isClient){
             if(curSeat){
                 return curSeat.status;
             }
-        },
-        
+        }
     });
 
     Template.statusbuttons.events({
@@ -142,7 +100,7 @@ if(Meteor.isClient){
             var seatID = Session.get('selectedSeat');
             SeatList.update({ _id: seatID }, { $set: {status: "bad"} });
         }
-    })
+    });
 
     Template.questions.helpers({
         'question': function(){
@@ -178,7 +136,7 @@ if(Meteor.isClient){
             console.log("your question is: "+question);
             var seatID = Session.get('selectedSeat');
             if(seatID){
-                var curSeat = SeatList.findOne
+                var curSeat = SeatList.findOne({ _id: seatID });
                 var d = new Date();
                 // create a Meteor function here to insert the question
                 Questions.insert({ IP: curSeat.IP, content: question,
@@ -190,7 +148,6 @@ if(Meteor.isClient){
             console.log("hide the question");
             Questions.update({ _id: this._id }, { $set: {status:"inactive"} });
         },
-        // NOT FINISHED
         'click .up': function(){
             console.log("voted up " + this._id);
             var upsesh = Session.get("up"+this._id);
@@ -211,34 +168,28 @@ if(Meteor.isClient){
                 Session.set("up"+this._id, "upvote");
                 console.log("up sesh set");  
             }
-        }
-        // // NOT FINISHED
-        // 'click .down': function(){
-        //     console.log("voted down " + this._id);
-        //     var downsesh = Session.get("down"+this._id);
-        //     if(!downsesh){
-        //         // "down" has not been clicked for this one
-        //         var upsesh = Session.get("up"+this._id);
-        //         if(upsesh){
-        //             // up HAS been clicked
-        //             delete Session.keys["up"+this._id];
-        //             console.log("up sesh deleted");
+        },
+        'click .down': function(){
+            console.log("voted down " + this._id);
+            var downsesh = Session.get("down"+this._id);
+            console.log("downsesh: "+downsesh);
+            if(!downsesh){
+                // "down" has not been clicked
+                var upsesh = Session.get("up"+this._id);
+                if(upsesh){
+                    console.log(upsesh);
+                    // up HAS been clicked
+                    delete Session.keys["up"+this._id];
+                    console.log("up sesh deleted");
 
-        //             Questions.update({ _id: this._id }, { $})
-        //         }
-        //         Session.set("down"+this._id);
-        //         console.log("down sesh set");
-        //     }
-        // }
-        // 'click #questioncontent': function(){
-        //     console.log("clicked questionnnnnn");
-        //     console.log("month: "+this.date.getMonth()+1);
-        //     console.log("year: "+this.date.getFullYear());
-        //     console.log("day: "+this.date.getDate());
-        //     console.log("date: "+this.date.toString());
-        //     var d = new Date();
-        //     console.log(d.toString());
-        //     console.log(d.toDateString());
-        // }
+                    Questions.update({ _id: this._id }, { $dec: {score:2}});
+                }else{
+                    Questions.update({ _id: this._id }, { $dec: {score:1} });                     
+                }
+                Session.set("down"+this._id, "downvote");
+                console.log("down sesh set");  
+            }
+        }
     });
+
 }
