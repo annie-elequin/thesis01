@@ -4,10 +4,14 @@ Questions = new Mongo.Collection('questions');
 if(Meteor.isClient){
     Meteor.subscribe('theClasses');
 
-    window.onbeforeunload = function(){
+    function rgb(r, g, b){
+        return "rgb("+r+","+g+","+b+")";
+    }
+
+    window.onunload = function(){
         console.log("setInactive");
-        // var curSeatID = Session.get('selectedSeat');
-        // console.log(curSeatID);
+        var curSeatID = Session.get('selectedSeat');
+        console.log(curSeatID);
         // SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
         // var thing = SeatList.findOne({ _id: curSeatID }).status;
         // console.log(thing);
@@ -168,6 +172,8 @@ if(Meteor.isClient){
                 Session.set("up"+this._id, "upvote");
                 console.log("up sesh set");  
             }
+
+            document.getElementById("vote"+this._id).style.backgroundColor = rgb(50, 200, 50);
         },
         'click .down': function(){
             console.log("voted down " + this._id);
@@ -182,13 +188,16 @@ if(Meteor.isClient){
                     delete Session.keys["up"+this._id];
                     console.log("up sesh deleted");
 
-                    Questions.update({ _id: this._id }, { $dec: {score:2}});
+                    Questions.update({ _id: this._id }, { $inc: {score:-2}});
                 }else{
-                    Questions.update({ _id: this._id }, { $dec: {score:1} });                     
+                    Questions.update({ _id: this._id }, { $inc: {score:-1} });                     
                 }
                 Session.set("down"+this._id, "downvote");
                 console.log("down sesh set");  
             }
+
+            document.getElementById("vote"+this._id).style.backgroundColor = rgb(220, 0, 0);
+
         }
     });
 

@@ -13,29 +13,30 @@
     overflow: hidden;
     width: 90%;
 }
-#inquiry {
+.inquiry {
     display: table-row;
     overflow: hidden; 
     background: lightgray;
 }
-#vote {
+.vote {
     display: table-cell; 
     padding: 3px; 
     vertical-align: top;
+    text-align: center;
     width: 35px;
     font-size: 25px;
     font-family: Cambria;
-    color: gray;
+    color: white;
 }
 .up .down {
      display:inline;  
 }
-#vote .up:hover {
-    color: red;
+.vote .up:hover {
+    color: black;
     cursor: pointer;
 }
-#vote .down:hover {
-    color: red;
+.vote .down:hover {
+    color: black;
     cursor: pointer;
 }
 .votedup .voteddown {
@@ -71,11 +72,11 @@
     background-color: #ccffcc;
 }
 .bad {
-    background-color: #ff0000;
+    background-color: rgb(255,0,0);
 }
 .meh {
-    background-color: #ffcc00;
+    background-color: rgb(255,200,0);
 }
 .good {
-    background-color: #33cc33;
+    background-color: rgb(50,200,50);
 }

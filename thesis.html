@@ -59,13 +59,13 @@
 
     <div id="questioncontainer">
         {{#each question}}
-            <div id="inquiry">
-                <div id="vote">
+            <div id="inquiry{{_id}}" class="inquiry">
+                <div id="vote{{_id}}" class="vote">
                     <span class="up {{votedup}}">↑</span>
                     <span class="down {{voteddown}}">↓</span>
                 </div>
                 <div id="questioncontent">
-                    {{content}}
+                    {{score}} -- {{content}}
                 </div>
                 {{#if professor}}
                     <div class="activebut">X</div>
