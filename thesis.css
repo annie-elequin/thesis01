@@ -43,7 +43,7 @@
     color: black;
 }
 
-#questioncontent {
+.questioncontent {
     display: table-cell; 
     padding: 4px;
     vertical-align: middle;

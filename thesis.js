@@ -8,33 +8,43 @@ if(Meteor.isClient){
         return "rgb("+r+","+g+","+b+")";
     }
 
-    window.onunload = function(){
-        console.log("setInactive");
-        var curSeatID = Session.get('selectedSeat');
-        console.log(curSeatID);
-        // SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
-        // var thing = SeatList.findOne({ _id: curSeatID }).status;
-        // console.log(thing);
-        // setInactive();
+    // function User(){
+
+    // }
+
+    // window.onunload = function(){
+    //     console.log("setInactive");
+    //     var curSeatID = Session.get('selectedSeat');
+    //     console.log(curSeatID);
+    //     // SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
+    //     // var thing = SeatList.findOne({ _id: curSeatID }).status;
+    //     // console.log(thing);
+    //     // setInactive();
+    // }
+
+    inactiveFunction = function(){
+        console.log("inactive Function");
     }
+    window.onbeforeunload = inactiveFunction();
 
     // HELPER functions for the CLASSROOM LAYOUT
     Template.classroomlayout.helpers({
-        'setInactive': function(){
-            console.log("setInactive");
-            var curSeatID = Session.get('selectedSeat');
-            console.log(curSeatID);
-            SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
-            var thing = SeatList.findOne({ _id: curSeatID }).status;
-            console.log(thing);
-        },
+        // 'setInactive': function(){
+        //     console.log("setInactive");
+        //     var curSeatID = Session.get('selectedSeat');
+        //     console.log(curSeatID);
+        //     SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
+        //     var thing = SeatList.findOne({ _id: curSeatID }).status;
+        //     console.log(thing);
+        // },
         'setActive': function(){
             console.log("setActive");
             
             var curIP = "129.62.150.10";
-            // later, we'll get the actual IP address
-            $.getJSON('//ipapi.co/json/', function(data) {
-                console.log(JSON.stringify(data, null, 2));
+
+            $.getJSON('https://api.ipify.org?format=json', function(data){
+                console.log("my ip address");
+                console.log(data.ip);
             });
 
 
@@ -124,13 +134,27 @@ if(Meteor.isClient){
                     return false;
                 }
             }
-        },
-        'votedup': function(){
-            console.log("upupupupupup");
-        },
-        'voteddown': function(){
-            console.log("downdowndowndowndown");
         }
+        // 'colorize': function(){
+        //     if(this.score > 0){
+        //         console.log("POSITIVE SCORE");
+        //         // document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (this.score*8)+100, 50);
+        //         // document.getElementById("content"+this._id).style.backgroundColor = "yellow";
+        //         thisthing = "content"+this._id;
+        //         $("#thisthing").css("background-color", "rgb(50,200,50)");
+        //     }else if(this.score < 0){
+        //         console.log("NEG SCORE");
+        //         // document.getElementById("content"+this._id).style.backgroundColor = rgb((this.score*(-8))+100, 0, 0);
+        //     }else{
+        //         console.log("nothing happened");
+        //     }
+        // }
+        // 'votedup': function(){
+        //     console.log("upupupupupup");
+        // },
+        // 'voteddown': function(){
+        //     console.log("downdowndowndowndown");
+        // }
     });
 
     Template.questions.events({
@@ -170,10 +194,16 @@ if(Meteor.isClient){
                     Questions.update({ _id: this._id }, { $inc: {score:1} });                     
                 }
                 Session.set("up"+this._id, "upvote");
-                console.log("up sesh set");  
+                console.log("up sesh set, score: "+this.score);  
             }
 
             document.getElementById("vote"+this._id).style.backgroundColor = rgb(50, 200, 50);
+            if(this.score > 0){
+                console.log((this.score*8)+100);
+                document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (this.score*8)+100, 50);
+            }else if(this.score < 0){
+                document.getElementById("content"+this._id).style.backgroundColor = rgb((this.score*(-8))+100,0,0);
+            }
         },
         'click .down': function(){
             console.log("voted down " + this._id);
@@ -197,7 +227,11 @@ if(Meteor.isClient){
             }
 
             document.getElementById("vote"+this._id).style.backgroundColor = rgb(220, 0, 0);
-
+            if(this.score > 0){
+                document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (this.score*8)+100, 50);
+            }else if(this.score < 0){
+                document.getElementById("content"+this._id).style.backgroundColor = rgb((this.score*(-8))+100,0,0);
+            }
         }
     });
 
