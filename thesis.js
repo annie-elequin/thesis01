@@ -135,6 +135,13 @@ if(Meteor.isClient){
                 }
             }
         }
+        
+        // 'votedup': function(){
+        //     console.log("upupupupupup");
+        // },
+        // 'voteddown': function(){
+        //     console.log("downdowndowndowndown");
+        // }
         // 'colorize': function(){
         //     if(this.score > 0){
         //         console.log("POSITIVE SCORE");
@@ -148,12 +155,6 @@ if(Meteor.isClient){
         //     }else{
         //         console.log("nothing happened");
         //     }
-        // }
-        // 'votedup': function(){
-        //     console.log("upupupupupup");
-        // },
-        // 'voteddown': function(){
-        //     console.log("downdowndowndowndown");
         // }
     });
 
