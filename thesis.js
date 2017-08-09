@@ -8,22 +8,14 @@ if(Meteor.isClient){
         return "rgb("+r+","+g+","+b+")";
     }
 
-    // window.onunload = function(){
-    //     console.log("setInactive");
-    //     var curSeatID = Session.get('selectedSeat');
-    //     console.log(curSeatID);
-    //     // SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
-    //     // var thing = SeatList.findOne({ _id: curSeatID }).status;
-    //     // console.log(thing);
-    //     // setInactive();
-    // }
-
     inactiveFunction = function(){
         console.log("inactive Function");
         var seatID = Session.get('selectedSeat');
         console.log("seatid: "+seatID);
+        if(seatID){
+            SeatList.update({_id: seatID},{$set:{status:"inactive"}});
+        }
     }
-    window.onbeforeunload = inactiveFunction();
 
     Template.classroomlayout.helpers({
         'setActive': function(){
