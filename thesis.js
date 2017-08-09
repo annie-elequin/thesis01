@@ -8,10 +8,6 @@ if(Meteor.isClient){
         return "rgb("+r+","+g+","+b+")";
     }
 
-    // function User(){
-
-    // }
-
     // window.onunload = function(){
     //     console.log("setInactive");
     //     var curSeatID = Session.get('selectedSeat');
@@ -24,19 +20,12 @@ if(Meteor.isClient){
 
     inactiveFunction = function(){
         console.log("inactive Function");
+        var seatID = Session.get('selectedSeat');
+        console.log("seatid: "+seatID);
     }
     window.onbeforeunload = inactiveFunction();
 
-    // HELPER functions for the CLASSROOM LAYOUT
     Template.classroomlayout.helpers({
-        // 'setInactive': function(){
-        //     console.log("setInactive");
-        //     var curSeatID = Session.get('selectedSeat');
-        //     console.log(curSeatID);
-        //     SeatList.update({ _id: curSeatID }, { $set: {status:"inactive"} });
-        //     var thing = SeatList.findOne({ _id: curSeatID }).status;
-        //     console.log(thing);
-        // },
         'setActive': function(){
             console.log("setActive");
             
@@ -134,28 +123,16 @@ if(Meteor.isClient){
                     return false;
                 }
             }
+        },
+        'colorize': function(){
+            var scr = this.score;
+            var id = this._id;
+            if(scr > 0){
+                document.getElementById("content"+id).style.backgroundColor = rgb(50, (scr*8)+100, 50);
+            }else if(scr < 0){
+                document.getElementById("content"+id).style.backgroundColor = rgb((scr*(-8))+100,0,0);
+            }
         }
-        
-        // 'votedup': function(){
-        //     console.log("upupupupupup");
-        // },
-        // 'voteddown': function(){
-        //     console.log("downdowndowndowndown");
-        // }
-        // 'colorize': function(){
-        //     if(this.score > 0){
-        //         console.log("POSITIVE SCORE");
-        //         // document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (this.score*8)+100, 50);
-        //         // document.getElementById("content"+this._id).style.backgroundColor = "yellow";
-        //         thisthing = "content"+this._id;
-        //         $("#thisthing").css("background-color", "rgb(50,200,50)");
-        //     }else if(this.score < 0){
-        //         console.log("NEG SCORE");
-        //         // document.getElementById("content"+this._id).style.backgroundColor = rgb((this.score*(-8))+100, 0, 0);
-        //     }else{
-        //         console.log("nothing happened");
-        //     }
-        // }
     });
 
     Template.questions.events({
@@ -181,6 +158,7 @@ if(Meteor.isClient){
             console.log("voted up " + this._id);
             var upsesh = Session.get("up"+this._id);
             console.log("upsesh: "+upsesh);
+            var temp = this.score;
             if(!upsesh){
                 // "up" has not been clicked
                 var downsesh = Session.get("down"+this._id);
@@ -191,25 +169,29 @@ if(Meteor.isClient){
                     console.log("down sesh deleted");
 
                     Questions.update({ _id: this._id }, { $inc: {score:2}});
+                    temp+=2;
                 }else{
-                    Questions.update({ _id: this._id }, { $inc: {score:1} });                     
+                    console.log("down had not been clicked");
+                    Questions.update({ _id: this._id }, { $inc: {score:1} });  
+                    temp+=1;                   
                 }
                 Session.set("up"+this._id, "upvote");
-                console.log("up sesh set, score: "+this.score);  
+                console.log("up sesh set, score: "+temp);  
             }
 
+            console.log("lets set the background color");
             document.getElementById("vote"+this._id).style.backgroundColor = rgb(50, 200, 50);
-            if(this.score > 0){
-                console.log((this.score*8)+100);
-                document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (this.score*8)+100, 50);
-            }else if(this.score < 0){
-                document.getElementById("content"+this._id).style.backgroundColor = rgb((this.score*(-8))+100,0,0);
+            if(temp > 0){
+                document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (temp*8)+100, 50);
+            }else if(temp < 0){
+                document.getElementById("content"+this._id).style.backgroundColor = rgb((temp*(-8))+100,0,0);
             }
         },
         'click .down': function(){
             console.log("voted down " + this._id);
             var downsesh = Session.get("down"+this._id);
             console.log("downsesh: "+downsesh);
+            var temp = this.score;
             if(!downsesh){
                 // "down" has not been clicked
                 var upsesh = Session.get("up"+this._id);
@@ -220,18 +202,20 @@ if(Meteor.isClient){
                     console.log("up sesh deleted");
 
                     Questions.update({ _id: this._id }, { $inc: {score:-2}});
+                    temp-=2;
                 }else{
-                    Questions.update({ _id: this._id }, { $inc: {score:-1} });                     
+                    Questions.update({ _id: this._id }, { $inc: {score:-1} }); 
+                    temp-=1;                    
                 }
                 Session.set("down"+this._id, "downvote");
                 console.log("down sesh set");  
             }
 
             document.getElementById("vote"+this._id).style.backgroundColor = rgb(220, 0, 0);
-            if(this.score > 0){
-                document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (this.score*8)+100, 50);
-            }else if(this.score < 0){
-                document.getElementById("content"+this._id).style.backgroundColor = rgb((this.score*(-8))+100,0,0);
+            if(temp > 0){
+                document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (temp*8)+100, 50);
+            }else if(temp < 0){
+                document.getElementById("content"+this._id).style.backgroundColor = rgb((temp*(-8))+100,0,0);
             }
         }
     });
