@@ -1,8 +1,8 @@
 import { SeatList } from '/imports/api/SeatList';
-// import { Questions } from '/imports/api/Questions';
+import { Questions } from '/imports/api/Questions';
 
 // SeatList = new Mongo.Collection('seats');
-Questions = new Mongo.Collection('questions');
+// Questions = new Mongo.Collection('questions');
 
 if(Meteor.isClient){
     // Meteor.startup(function(){
@@ -10,6 +10,7 @@ if(Meteor.isClient){
     //     Meteor.subscribe('seats');
     // });
     Meteor.subscribe('seats');
+    Meteor.subscribe('questions');
 
     function rgb(r, g, b){
         return "rgb("+r+","+g+","+b+")";
@@ -221,16 +222,18 @@ if(Meteor.isClient){
                     temp+=1;                   
                 }
                 Session.set("up"+this._id, "upvote");
-                console.log("up sesh set, score: "+temp);  
+                console.log("up sesh set, score: "+temp); 
+                
+                console.log("lets set the background color");
+                document.getElementById("vote"+this._id).style.backgroundColor = rgb(50, 200, 50);
+                if(temp > 0){
+                    document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (temp*8)+100, 50);
+                }else if(temp < 0){
+                    document.getElementById("content"+this._id).style.backgroundColor = rgb((temp*(-8))+150,60,60);
+                }
             }
 
-            console.log("lets set the background color");
-            document.getElementById("vote"+this._id).style.backgroundColor = rgb(50, 200, 50);
-            if(temp > 0){
-                document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (temp*8)+100, 50);
-            }else if(temp < 0){
-                document.getElementById("content"+this._id).style.backgroundColor = rgb((temp*(-8))+150,60,60);
-            }
+            
         },
         'click .down': function(){
             console.log("voted down " + this._id);
@@ -254,14 +257,15 @@ if(Meteor.isClient){
                 }
                 Session.set("down"+this._id, "downvote");
                 console.log("down sesh set");  
+
+                document.getElementById("vote"+this._id).style.backgroundColor = rgb(220, 0, 0);
+                if(temp > 0){
+                    document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (temp*8)+100, 50);
+                }else if(temp < 0){
+                    document.getElementById("content"+this._id).style.backgroundColor = rgb((temp*(-8))+150,60,60);
+                }
             }
 
-            document.getElementById("vote"+this._id).style.backgroundColor = rgb(220, 0, 0);
-            if(temp > 0){
-                document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (temp*8)+100, 50);
-            }else if(temp < 0){
-                document.getElementById("content"+this._id).style.backgroundColor = rgb((temp*(-8))+150,60,60);
-            }
         }
     });
 
@@ -270,6 +274,9 @@ if(Meteor.isClient){
 if(Meteor.isServer){
     Meteor.publish('seats', function(){
         return SeatList.find();
+    });
+    Meteor.publish('questions', function(){
+        return Questions.find();
     });
 
     // console.log(SeatList.find().fetch());
