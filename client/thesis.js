@@ -1,46 +1,104 @@
-SeatList = new Mongo.Collection('seats');
+import { SeatList } from '/imports/api/SeatList';
+// import { Questions } from '/imports/api/Questions';
+
+// SeatList = new Mongo.Collection('seats');
 Questions = new Mongo.Collection('questions');
 
 if(Meteor.isClient){
-    Meteor.subscribe('theClasses');
+    // Meteor.startup(function(){
+    //     SeatList = new Mongo.Collection('seats');
+    //     Meteor.subscribe('seats');
+    // });
 
     function rgb(r, g, b){
         return "rgb("+r+","+g+","+b+")";
     }
 
-    inactiveFunction = function(){
-        console.log("inactive Function");
-        var seatID = Session.get('selectedSeat');
-        console.log("seatid: "+seatID);
-        if(seatID){
-            SeatList.update({_id: seatID},{$set:{status:"inactive"}});
-        }
-    }
+    // getIP = function(){
+    //     var curIP = "";
+    //     console.log("GET IP");
+    //     $.get('http://jsonip.com/', function(r){ curIP=r.ip; });
+    //     Session.set('curIP', curIP);
+    //     console.log("IP: "+curIP);
+    //     return true;
+    // }
+
+    // setActive = function(){
+    //     console.log("setActive");
+            
+    //     var curIP = "129.62.150.10";
+
+    //     $.getJSON('https://api.ipify.org?format=json', function(data){
+    //         console.log("my ip address");
+    //         console.log(data.ip);
+    //     });
+
+
+    //     // set seat session
+    //     var curSeat = SeatList.findOne({ IP: curIP });
+    //     console.log("curseat: "+curSeat);
+    //     if(curSeat){
+    //         console.log("found the current seat "+curSeat._id);
+    //         SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
+    //         Session.set('selectedSeat', curSeat._id);
+    //     }else{
+    //         console.log("there was no seat to find");
+    //     }
+    // }
+
+    // inactiveFunction = function(){
+    //     console.log("inactive Function");
+    //     var seatID = Session.get('selectedSeat');
+    //     console.log("seatid: "+seatID);
+    //     if(seatID){
+    //         SeatList.update({_id: seatID},{$set:{status:"inactive"}});
+    //     }
+    // }
 
     Template.classroomlayout.helpers({
+        'getIP': function(){
+            console.log("getip");
+            // var curIP = "";
+            $.get('http://ipinfo.io', function(r){
+                console.log("in the ip function");
+                Session.set('curIP',r.ip);
+                console.log(r.ip);
+            }, "jsonp");
+            // Session.set('curIP', curIP);
+        },
         'setActive': function(){
             console.log("setActive");
             
-            var curIP = "129.62.150.10";
+            // var curIP = "129.62.150.10";
 
-            $.getJSON('https://api.ipify.org?format=json', function(data){
-                console.log("my ip address");
-                console.log(data.ip);
-            });
-
+            if(SeatList){
+                console.log("seatlist exists");
+                var curIP = Session.get('curIP');
+                console.log("ip: "+curIP);
+                if(curIP){
+                    var curSeat = SeatList.findOne({ IP: curIP });
+                    console.log("curseat: "+curSeat);
+                    if(curSeat){
+                        SeatList.update({ _id: curSeat._id }, { $set: {status:"active"} });
+                        Session.set('selectedSeat', curSeat._id);
+                    }
+                }
+            }
 
             // set seat session
-            var curSeat = SeatList.findOne({ IP: curIP });
-            if(curSeat){
-                console.log("found the current seat "+curSeat._id);
-                SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
-                Session.set('selectedSeat', curSeat._id);
-            }else{
-                console.log("there was no seat to find");
-            }
+            // var curSeat = SeatList.findOne({ IP: curIP });
+            // if(curSeat){
+            //     console.log("found the current seat "+curSeat._id);
+            //     SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
+            //     Session.set('selectedSeat', curSeat._id);
+            // }else{
+            //     console.log("there was no seat to find");
+            // }
         },
         'seatInactive': function(){
+            console.log("seatInactive");
             var seatID = Session.get('selectedSeat');
+            console.log(seatID);
             if(seatID){
                 return false;
             }else{
@@ -120,9 +178,9 @@ if(Meteor.isClient){
             var scr = this.score;
             var id = this._id;
             if(scr > 0){
-                document.getElementById("content"+id).style.backgroundColor = rgb(50, (scr*8)+100, 50);
+                document.getElementById("content"+id).style.backgroundColor = rgb(45, (scr*8)+140, 0);
             }else if(scr < 0){
-                document.getElementById("content"+id).style.backgroundColor = rgb((scr*(-8))+100,0,0);
+                document.getElementById("content"+id).style.backgroundColor = rgb((scr*(8))+255,130,180);
             }
         }
     });
@@ -176,7 +234,7 @@ if(Meteor.isClient){
             if(temp > 0){
                 document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (temp*8)+100, 50);
             }else if(temp < 0){
-                document.getElementById("content"+this._id).style.backgroundColor = rgb((temp*(-8))+100,0,0);
+                document.getElementById("content"+this._id).style.backgroundColor = rgb((temp*(-8))+150,60,60);
             }
         },
         'click .down': function(){
@@ -207,9 +265,35 @@ if(Meteor.isClient){
             if(temp > 0){
                 document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (temp*8)+100, 50);
             }else if(temp < 0){
-                document.getElementById("content"+this._id).style.backgroundColor = rgb((temp*(-8))+100,0,0);
+                document.getElementById("content"+this._id).style.backgroundColor = rgb((temp*(-8))+150,60,60);
             }
         }
     });
+
+}
+
+if(Meteor.isServer){
+    // console.log(SeatList.find().fetch());
+    // Meteor.startup(function(){
+    //     SeatList = new Mongo.Collection('seats');
+    //     SeatList.allow({
+    //         insert: function(){
+    //             return true;
+    //         },
+    //         update: function (){
+    //             return true;
+    //         },
+    //         remove: function(){
+    //             return true;
+    //         }
+    //     });
+    //     if(SeatList.find().count() == 0){
+    //         console.log("ITS EMPTYYY");
+    //     }
+
+    //     Meteor.publish('seats', function(){
+    //         return SeatList.find();
+    //     });
+    // });
 
 }
