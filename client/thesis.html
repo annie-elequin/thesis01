@@ -15,10 +15,11 @@
 </template>
 
 <template name="classroomlayout">
-           <!-- {{#if seatInactive}}  -->
-        {{getIP}}
-        {{setActive}} 
-          <!-- {{/if}}     -->
+        
+        {{#if isActive}}
+            {{getIP}}
+            {{setActive}} 
+        {{/if}}
 
         <br /><br />
         <table id="classroom">

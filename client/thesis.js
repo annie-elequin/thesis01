@@ -9,62 +9,29 @@ if(Meteor.isClient){
     //     SeatList = new Mongo.Collection('seats');
     //     Meteor.subscribe('seats');
     // });
+    Meteor.subscribe('seats');
 
     function rgb(r, g, b){
         return "rgb("+r+","+g+","+b+")";
     }
 
-    // getIP = function(){
-    //     var curIP = "";
-    //     console.log("GET IP");
-    //     $.get('http://jsonip.com/', function(r){ curIP=r.ip; });
-    //     Session.set('curIP', curIP);
-    //     console.log("IP: "+curIP);
-    //     return true;
-    // }
-
-    // setActive = function(){
-    //     console.log("setActive");
-            
-    //     var curIP = "129.62.150.10";
-
-    //     $.getJSON('https://api.ipify.org?format=json', function(data){
-    //         console.log("my ip address");
-    //         console.log(data.ip);
-    //     });
-
-
-    //     // set seat session
-    //     var curSeat = SeatList.findOne({ IP: curIP });
-    //     console.log("curseat: "+curSeat);
-    //     if(curSeat){
-    //         console.log("found the current seat "+curSeat._id);
-    //         SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
-    //         Session.set('selectedSeat', curSeat._id);
-    //     }else{
-    //         console.log("there was no seat to find");
-    //     }
-    // }
-
-    // inactiveFunction = function(){
-    //     console.log("inactive Function");
-    //     var seatID = Session.get('selectedSeat');
-    //     console.log("seatid: "+seatID);
-    //     if(seatID){
-    //         SeatList.update({_id: seatID},{$set:{status:"inactive"}});
-    //     }
-    // }
+    inactiveFunction = function(){
+        console.log("inactive Function");
+        var seatID = Session.get('selectedSeat');
+        console.log("seatid: "+seatID);
+        if(seatID){
+            SeatList.update({_id: seatID},{$set:{status:"inactive"}});
+        }
+    }
 
     Template.classroomlayout.helpers({
         'getIP': function(){
             console.log("getip");
-            // var curIP = "";
             $.get('http://ipinfo.io', function(r){
-                console.log("in the ip function");
+                // console.log("in the ip function");
                 Session.set('curIP',r.ip);
-                console.log(r.ip);
+                // console.log(r.ip);
             }, "jsonp");
-            // Session.set('curIP', curIP);
         },
         'setActive': function(){
             console.log("setActive");
@@ -72,31 +39,21 @@ if(Meteor.isClient){
             // var curIP = "129.62.150.10";
 
             if(SeatList){
-                console.log("seatlist exists");
+                // console.log("seatlist exists");
                 var curIP = Session.get('curIP');
-                console.log("ip: "+curIP);
+                // console.log("ip: "+curIP);
                 if(curIP){
                     var curSeat = SeatList.findOne({ IP: curIP });
-                    console.log("curseat: "+curSeat);
+                    // console.log("curseat: "+curSeat);
                     if(curSeat){
                         SeatList.update({ _id: curSeat._id }, { $set: {status:"active"} });
                         Session.set('selectedSeat', curSeat._id);
                     }
                 }
             }
-
-            // set seat session
-            // var curSeat = SeatList.findOne({ IP: curIP });
-            // if(curSeat){
-            //     console.log("found the current seat "+curSeat._id);
-            //     SeatList.update({ _id: curSeat._id }, { $set: {status: "active"} });
-            //     Session.set('selectedSeat', curSeat._id);
-            // }else{
-            //     console.log("there was no seat to find");
-            // }
         },
-        'seatInactive': function(){
-            console.log("seatInactive");
+        'isActive': function(){
+            console.log("isActive?");
             var seatID = Session.get('selectedSeat');
             console.log(seatID);
             if(seatID){
@@ -126,10 +83,8 @@ if(Meteor.isClient){
             return SeatList.find({ row: 3 });
         },
         'seatstatus': function(){
-            // console.log("seatstatus");
             var curSeatID = this._id;
             var curSeat = SeatList.findOne({ _id: curSeatID });
-
             if(curSeat){
                 return curSeat.status;
             }
@@ -137,6 +92,46 @@ if(Meteor.isClient){
     });
 
     Template.statusbuttons.events({
+        // 'click .FIX': function(event){
+        //     console.log("FIX EVERYTHING");
+        //     SeatList.insert({ IP:"129.62.150.22", status:"inactive", row:1, col:1 });
+        //     SeatList.insert({ IP:"129.62.150.21", status:"inactive", row:1, col:2 });
+        //     SeatList.insert({ IP:"129.62.150.20", status:"inactive", row:1, col:3 });
+        //     SeatList.insert({ IP:"129.62.150.19", status:"inactive", row:1, col:4 });
+        //     SeatList.insert({ IP:"129.62.150.18", status:"inactive", row:1, col:5 });
+        //     SeatList.insert({ IP:"129.62.150.17", status:"inactive", row:1, col:6 });
+        //     SeatList.insert({ IP:"129.62.150.16", status:"inactive", row:1, col:7 });
+        //     SeatList.insert({ IP:"129.62.150.15", status:"inactive", row:1, col:8 });
+        //     SeatList.insert({ IP:"129.62.150.14", status:"inactive", row:1, col:9 });
+        //     SeatList.insert({ IP:"129.62.150.13", status:"inactive", row:1, col:10 });
+        //     SeatList.insert({ IP:"129.62.150.12", status:"inactive", row:1, col:11 });
+        //     SeatList.insert({ IP:"129.62.150.11", status:"inactive", row:1, col:12 });
+        //     SeatList.insert({ IP:"129.62.150.34", status:"inactive", row:2, col:13 });
+        //     SeatList.insert({ IP:"129.62.150.33", status:"inactive", row:2, col:14 });
+        //     SeatList.insert({ IP:"129.62.150.32", status:"inactive", row:2, col:15 });
+        //     SeatList.insert({ IP:"129.62.150.31", status:"inactive", row:2, col:16 });
+        //     SeatList.insert({ IP:"129.62.150.30", status:"inactive", row:2, col:17 });
+        //     SeatList.insert({ IP:"129.62.150.29", status:"inactive", row:2, col:18 });
+        //     SeatList.insert({ IP:"129.62.150.28", status:"inactive", row:2, col:19 });
+        //     SeatList.insert({ IP:"129.62.150.27", status:"inactive", row:2, col:20 });
+        //     SeatList.insert({ IP:"129.62.150.26", status:"inactive", row:2, col:21 });
+        //     SeatList.insert({ IP:"129.62.150.25", status:"inactive", row:2, col:22 });
+        //     SeatList.insert({ IP:"129.62.150.24", status:"inactive", row:2, col:23 });
+        //     SeatList.insert({ IP:"129.62.150.23", status:"inactive", row:2, col:24 });
+        //     SeatList.insert({ IP:"129.62.150.46", status:"inactive", row:3, col:25 });
+        //     SeatList.insert({ IP:"129.62.150.45", status:"inactive", row:3, col:26 });
+        //     SeatList.insert({ IP:"129.62.150.44", status:"inactive", row:3, col:27 });
+        //     SeatList.insert({ IP:"129.62.150.43", status:"inactive", row:3, col:28 });
+        //     SeatList.insert({ IP:"129.62.150.42", status:"inactive", row:3, col:29 });
+        //     SeatList.insert({ IP:"129.62.150.41", status:"inactive", row:3, col:30 });
+        //     SeatList.insert({ IP:"129.62.150.40", status:"inactive", row:3, col:31 });
+        //     SeatList.insert({ IP:"129.62.150.39", status:"inactive", row:3, col:32 });
+        //     SeatList.insert({ IP:"129.62.150.38", status:"inactive", row:3, col:33 });
+        //     SeatList.insert({ IP:"129.62.150.37", status:"inactive", row:3, col:34 });
+        //     SeatList.insert({ IP:"129.62.150.36", status:"inactive", row:3, col:35 });
+        //     SeatList.insert({ IP:"129.62.150.35", status:"inactive", row:3, col:36 });
+        //     SeatList.insert({ IP:"129.62.150.10", status:"inactive" });
+        // },
         'click .good': function(event){
             console.log("good");
             var seatID = Session.get('selectedSeat');
@@ -273,6 +268,10 @@ if(Meteor.isClient){
 }
 
 if(Meteor.isServer){
+    Meteor.publish('seats', function(){
+        return SeatList.find();
+    });
+
     // console.log(SeatList.find().fetch());
     // Meteor.startup(function(){
     //     SeatList = new Mongo.Collection('seats');
