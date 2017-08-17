@@ -1,16 +1,17 @@
 <head>
     <title>Lecture</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body onbeforeunload="inactiveFunction();">
-    <h1>Welcome, Student!</h1>
+    <h1>Welcome, <span id="name"></span>!</h1>
     <p><span style="float:left;">{{> statusbuttons}}</span></p>
     {{> classroomlayout }}
     {{> questions }}
 </body>
 
 <template name="statusbuttons">
-    <button class="bad">Bad</button>
-    <button class="meh">Meh</button>
+    <button class="bad">Stop</button>
+    <button class="meh">Slow Down</button>
     <button class="good">Good</button>
 </template>
 
