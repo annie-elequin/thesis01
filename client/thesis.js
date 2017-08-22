@@ -1,10 +1,12 @@
 import { SeatList } from '/imports/api/SeatList';
 import { Questions } from '/imports/api/Questions';
 import { Log } from '/imports/api/Log';
+import { HTTP } from 'meteor/http'
 
 if(Meteor.isClient){
     Meteor.subscribe('seats');
     Meteor.subscribe('questions');
+    Meteor.subscribe('log');
 
     function rgb(r, g, b){
         return "rgb("+r+","+g+","+b+")";
@@ -15,7 +17,7 @@ if(Meteor.isClient){
         var seatID = Session.get('selectedSeat');
         console.log("seatid: "+seatID);
         if(seatID){
-            SeatList.update({_id: seatID},{$set:{status:"inactive"}});
+            Meteor.call('changeStatus', seatID, "inactive");
         }
     }
 
@@ -41,7 +43,7 @@ if(Meteor.isClient){
                     var curSeat = SeatList.findOne({ IP: curIP });
                     // console.log("curseat: "+curSeat);
                     if(curSeat){
-                        SeatList.update({ _id: curSeat._id }, { $set: {status:"active"} });
+                        Meteor.call('changeStatus', curSeat._id, "active");
                         Session.set('selectedSeat', curSeat._id);
                     }
                 }
@@ -86,22 +88,38 @@ if(Meteor.isClient){
         }
     });
 
+    Template.statusbuttons.helpers({
+        'getname': function(){
+            console.log("getname");
+            HTTP.call('GET', 'http://meteor.ecs.baylor.edu:5000', {name: "studentID"}, function(error,response){
+                if(error){
+                    console.log('http get FAILED');
+                    console.log(error);
+                }else{
+                    console.log('http get success');
+                    console.log(response);
+                }
+            });
+            console.log("finished I guess");
+        }
+    });
+
     Template.statusbuttons.events({
-        'click .good': function(event){
+        'click .goodbtn': function(event){
             console.log("good");
             var seatID = Session.get('selectedSeat');
             console.log("id: "+seatID);
-            SeatList.update({ _id: seatID }, { $set: {status: "good"} });
+            Meteor.call('changeStatus', seatID, "good");
         },
-        'click .meh': function(event){
+        'click .mehbtn': function(event){
             console.log("meh");
             var seatID = Session.get('selectedSeat');
-            SeatList.update({ _id: seatID }, { $set: {status: "meh"} });
+            Meteor.call('changeStatus', seatID, "meh");
         },
-        'click .bad': function(event){
+        'click .badbtn': function(event){
             console.log("bad");
             var seatID = Session.get('selectedSeat');
-            SeatList.update({ _id: seatID }, { $set: {status: "bad"} });
+            Meteor.call('changeStatus', seatID, "bad");
         }
     });
 
@@ -144,15 +162,13 @@ if(Meteor.isClient){
             if(seatID){
                 var curSeat = SeatList.findOne({ _id: seatID });
                 var d = new Date();
-                // create a Meteor function here to insert the question
-                Questions.insert({ IP: curSeat.IP, content: question,
-                    score: 0, status: "active", date: d });
+                Meteor.call('submitQuestion', curSeat.IP, question, 0, "active", d);
             }
             event.target.question.value = "";
         },
         'click .activebut': function(){
             console.log("hide the question");
-            Questions.update({ _id: this._id }, { $set: {status:"inactive"} });
+            Meteor.call('changeQuestionStatus', this._id, "inactive");
         },
         'click .up': function(){
             console.log("voted up " + this._id);
@@ -168,11 +184,11 @@ if(Meteor.isClient){
                     delete Session.keys["down"+this._id];
                     console.log("down sesh deleted");
 
-                    Questions.update({ _id: this._id }, { $inc: {score:2}});
+                    Meteor.call('setScore', this._id, 2);
                     temp+=2;
                 }else{
                     console.log("down had not been clicked");
-                    Questions.update({ _id: this._id }, { $inc: {score:1} });  
+                    Meteor.call('setScore', this._id, 1);
                     temp+=1;                   
                 }
                 Session.set("up"+this._id, "upvote");
@@ -203,10 +219,10 @@ if(Meteor.isClient){
                     delete Session.keys["up"+this._id];
                     console.log("up sesh deleted");
 
-                    Questions.update({ _id: this._id }, { $inc: {score:-2}});
+                    Meteor.call('setScore', this._id, -2);
                     temp-=2;
                 }else{
-                    Questions.update({ _id: this._id }, { $inc: {score:-1} }); 
+                    Meteor.call('setScore', this._id, -1);
                     temp-=1;                    
                 }
                 Session.set("down"+this._id, "downvote");
@@ -232,67 +248,26 @@ if(Meteor.isServer){
     Meteor.publish('questions', function(){
         return Questions.find();
     });
-
+    Meteor.publish('log', function(){
+        return Log.find();
+    });
 }
 
-jQuery.fn.extend({
-/**
-* Returns get parameters.
-*
-* If the desired param does not exist, null will be returned
-*
-* To get the document params:
-* @example value = $(document).getUrlParam("paramName");
-* 
-* To get the params of a html-attribut (uses src attribute)
-* @example value = $('#imgLink').getUrlParam("paramName");
-*/ 
- getUrlParam: function(strParamName){
-	  strParamName = escape(unescape(strParamName));
-	  
-	  var returnVal = new Array();
-	  var qString = null;
-	  
-	  if ($(this).attr("nodeName")=="#document") {
-	  	//document-handler
-		
-		if (window.location.search.search(strParamName) > -1 ){
-			
-			qString = window.location.search.substr(1,window.location.search.length).split("&");
-		}
-			
-	  } else if ($(this).attr("src")!="undefined") {
-	  	
-	  	var strHref = $(this).attr("src")
-	  	if ( strHref.indexOf("?") > -1 ){
-	    	var strQueryString = strHref.substr(strHref.indexOf("?")+1);
-	  		qString = strQueryString.split("&");
-	  	}
-	  } else if ($(this).attr("href")!="undefined") {
-	  	
-	  	var strHref = $(this).attr("href")
-	  	if ( strHref.indexOf("?") > -1 ){
-	    	var strQueryString = strHref.substr(strHref.indexOf("?")+1);
-	  		qString = strQueryString.split("&");
-	  	}
-	  } else {
-	  	return null;
-	  }
-	  	
-	  
-	  if (qString==null) return null;
-	  
-	  
-	  for (var i=0;i<qString.length; i++){
-			if (escape(unescape(qString[i].split("=")[0])) == strParamName){
-				returnVal.push(qString[i].split("=")[1]);
-			}
-			
-	  }
-	  
-	  
-	  if (returnVal.length==0) return null;
-	  else if (returnVal.length==1) return returnVal[0];
-	  else return returnVal;
-	}
+Meteor.methods({
+    'changeStatus': function(studID, stat){
+        SeatList.update({_id: studID}, {$set:{status:stat}});
+    },
+    'submitQuestion': function(ipaddress, question, scr, stat, d){
+        Questions.insert({ IP: ipaddress, content: question,
+            score: scr, status: stat, date: d });
+    },
+    'changeQuestionStatus': function(questionID, stat){
+        Questions.update({ _id: questionID }, { $set: {status:stat} });        
+    },
+    'setScore': function(questionID, score){
+        Questions.update({ _id: questionID }, { $inc:score });
+    },
+    'recordLog': function(time, name, statechange){
+        Log.insert({ timestamp: time, student: name, log: statechange });
+    }
 });
