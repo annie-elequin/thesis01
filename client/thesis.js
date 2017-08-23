@@ -13,9 +13,9 @@ if(Meteor.isClient){
     }
 
     inactiveFunction = function(){
-        console.log("inactive Function");
+        // console.log("inactive Function");
         var seatID = Session.get('selectedSeat');
-        console.log("seatid: "+seatID);
+        // console.log("seatid: "+seatID);
         if(seatID){
             Meteor.call('changeStatus', seatID, "inactive");
         }
@@ -23,15 +23,47 @@ if(Meteor.isClient){
 
     Template.classroomlayout.helpers({
         'getIP': function(){
-            console.log("getip");
+            // console.log("getip");
             $.get('http://ipinfo.io', function(r){
                 // console.log("in the ip function");
                 Session.set('curIP',r.ip);
                 // console.log(r.ip);
             }, "jsonp");
+
+            var curIP = Session.get('curIP');
+            var postData = {
+                data: {
+                    "IP_Address": curIP,
+                }
+            }
+
+            HTTP.post('https://csi-info.baylor.edu/upload/getUserID.php', postData,
+                function( error, response ) {
+                if ( error ) {
+                    console.log("super didn't work");
+                  console.log( error );
+                } else {
+                    console.log("worked!");
+                  console.log( response );
+                  /*
+                   This will return the HTTP response object that looks something like this:
+                   {
+                     content: "String of content...",
+                     data: {
+                       "id": 101,
+                       "title": "Title of our new post",
+                       "body": "Body of our new post",
+                       "userId": 1337
+                     },
+                     headers: {  Object containing HTTP response headers }
+                     statusCode: 201
+                   }
+                  */
+                }
+              });
         },
         'setActive': function(){
-            console.log("setActive");
+            // console.log("setActive");
             
             // var curIP = "129.62.150.10";
 
@@ -45,14 +77,15 @@ if(Meteor.isClient){
                     if(curSeat){
                         Meteor.call('changeStatus', curSeat._id, "active");
                         Session.set('selectedSeat', curSeat._id);
+
                     }
                 }
             }
         },
         'isActive': function(){
-            console.log("isActive?");
+            // console.log("isActive?");
             var seatID = Session.get('selectedSeat');
-            console.log(seatID);
+            // console.log(seatID);
             if(seatID){
                 return false;
             }else{
@@ -82,6 +115,7 @@ if(Meteor.isClient){
         'seatstatus': function(){
             var curSeatID = this._id;
             var curSeat = SeatList.findOne({ _id: curSeatID });
+            
             if(curSeat){
                 return curSeat.status;
             }
@@ -89,19 +123,7 @@ if(Meteor.isClient){
     });
 
     Template.statusbuttons.helpers({
-        'getname': function(){
-            console.log("getname");
-            HTTP.call('GET', 'http://meteor.ecs.baylor.edu:5000', {name: "studentID"}, function(error,response){
-                if(error){
-                    console.log('http get FAILED');
-                    console.log(error);
-                }else{
-                    console.log('http get success');
-                    console.log(response);
-                }
-            });
-            console.log("finished I guess");
-        }
+        
     });
 
     Template.statusbuttons.events({
@@ -121,6 +143,36 @@ if(Meteor.isClient){
             var seatID = Session.get('selectedSeat');
             Meteor.call('changeStatus', seatID, "bad");
         }
+        // 'click .thing': function(event){
+        //         console.log("getname");
+        //         // HTTP.call('GET', 'https://csi-info.baylor.edu/upload/course.php', {}, function(error,response){
+        //         //     if(error){
+        //         //         console.log('http get FAILED');
+        //         //         console.log(error);
+        //         //     }else{
+        //         //         console.log('http get success');
+        //         //         console.log(response);
+        //         //     }
+        //         // });
+        //         // $.getJSON('http://anyorigin.com/go?url=https%3A//csi-info.baylor.edu/upload/course.php&callback=?', function(data){
+        //         //     // $('#output').html(data.contents);
+        //         //     console.log(data.contents);
+        //         //     console.dir(data);
+        //         //     console.log(data);
+        //         // });
+        //         // // Meteor.call('httpGETNAME');
+        //         // HTTP.call('GET', 'http://anyorigin.com/go?url=https%3A//csi-info.baylor.edu/upload/course.php&callback=?', {}, function(error,response){
+        //         //     if(error){
+        //         //         console.log('http get FAILED');
+        //         //         console.log(error);
+        //         //     }else{
+        //         //         console.log('http get success');
+        //         //         console.log(response);
+        //         //     }
+        //         // });
+
+        //         console.log("finished I guess");
+        // }
     });
 
     Template.questions.helpers({
@@ -162,39 +214,41 @@ if(Meteor.isClient){
             if(seatID){
                 var curSeat = SeatList.findOne({ _id: seatID });
                 var d = new Date();
-                Meteor.call('submitQuestion', curSeat.IP, question, 0, "active", d);
+                Meteor.call('submitQuestion', seatID, curSeat.IP, question, 0, "active", d);
             }
             event.target.question.value = "";
         },
         'click .activebut': function(){
-            console.log("hide the question");
-            Meteor.call('changeQuestionStatus', this._id, "inactive");
+            // console.log("hide the question");
+            var seatID = Session.get('selectedSeat');
+            Meteor.call('changeQuestionStatus', seatID, this._id, "inactive");
         },
         'click .up': function(){
-            console.log("voted up " + this._id);
+            var seatID = Session.get('selectedSeat');
+            // console.log("voted up " + this._id);
             var upsesh = Session.get("up"+this._id);
-            console.log("upsesh: "+upsesh);
+            // console.log("upsesh: "+upsesh);
             var temp = this.score;
             if(!upsesh){
                 // "up" has not been clicked
                 var downsesh = Session.get("down"+this._id);
                 if(downsesh){
-                    console.log(downsesh);
+                    // console.log(downsesh);
                     // down HAS been clicked
                     delete Session.keys["down"+this._id];
-                    console.log("down sesh deleted");
+                    // console.log("down sesh deleted");
 
-                    Meteor.call('setScore', this._id, 2);
+                    Meteor.call('setScore', seatID, this._id, 2);
                     temp+=2;
                 }else{
-                    console.log("down had not been clicked");
-                    Meteor.call('setScore', this._id, 1);
+                    // console.log("down had not been clicked");
+                    Meteor.call('setScore', seatID, this._id, 1);
                     temp+=1;                   
                 }
                 Session.set("up"+this._id, "upvote");
-                console.log("up sesh set, score: "+temp); 
+                // console.log("up sesh set, score: "+temp); 
                 
-                console.log("lets set the background color");
+                // console.log("lets set the background color");
                 document.getElementById("vote"+this._id).style.backgroundColor = rgb(50, 200, 50);
                 if(temp > 0){
                     document.getElementById("content"+this._id).style.backgroundColor = rgb(50, (temp*8)+100, 50);
@@ -206,27 +260,28 @@ if(Meteor.isClient){
             
         },
         'click .down': function(){
-            console.log("voted down " + this._id);
+            var seatID = Session.get('selectedSeat');            
+            // console.log("voted down " + this._id);
             var downsesh = Session.get("down"+this._id);
-            console.log("downsesh: "+downsesh);
+            // console.log("downsesh: "+downsesh);
             var temp = this.score;
             if(!downsesh){
                 // "down" has not been clicked
                 var upsesh = Session.get("up"+this._id);
                 if(upsesh){
-                    console.log(upsesh);
+                    // console.log(upsesh);
                     // up HAS been clicked
                     delete Session.keys["up"+this._id];
-                    console.log("up sesh deleted");
+                    // console.log("up sesh deleted");
 
-                    Meteor.call('setScore', this._id, -2);
+                    Meteor.call('setScore', seatID, this._id, -2);
                     temp-=2;
                 }else{
-                    Meteor.call('setScore', this._id, -1);
+                    Meteor.call('setScore', seatID, this._id, -1);
                     temp-=1;                    
                 }
                 Session.set("down"+this._id, "downvote");
-                console.log("down sesh set");  
+                // console.log("down sesh set");  
 
                 document.getElementById("vote"+this._id).style.backgroundColor = rgb(220, 0, 0);
                 if(temp > 0){
@@ -236,6 +291,12 @@ if(Meteor.isClient){
                 }
             }
 
+        }
+    });
+
+    Template.body.events({
+        'submit .new-user': function(event){
+            var name = event.target.studentID.value;
         }
     });
 
@@ -251,23 +312,37 @@ if(Meteor.isServer){
     Meteor.publish('log', function(){
         return Log.find();
     });
+
+    // Meteor.methods({
+    //     'httpGETNAME': function(){
+    //         HTTP.call('GET', 'http://anyorigin.com/go?url=https%3A//csi-info.baylor.edu/upload/course.php&callback=?', {}, function(error,response){
+    //             if(error){
+    //                 console.log('http get FAILED');
+    //                 console.log(error);
+    //             }else{
+    //                 console.log('http get success');
+    //                 console.log(response);
+    //             }
+    //         });
+    //     }
+    // });
 }
 
-Meteor.methods({
-    'changeStatus': function(studID, stat){
-        SeatList.update({_id: studID}, {$set:{status:stat}});
-    },
-    'submitQuestion': function(ipaddress, question, scr, stat, d){
-        Questions.insert({ IP: ipaddress, content: question,
-            score: scr, status: stat, date: d });
-    },
-    'changeQuestionStatus': function(questionID, stat){
-        Questions.update({ _id: questionID }, { $set: {status:stat} });        
-    },
-    'setScore': function(questionID, score){
-        Questions.update({ _id: questionID }, { $inc:score });
-    },
-    'recordLog': function(time, name, statechange){
-        Log.insert({ timestamp: time, student: name, log: statechange });
-    }
-});
+// Meteor.methods({
+//     'changeStatus': function(studID, stat){
+//         SeatList.update({_id: studID}, {$set:{status:stat}});
+//     },
+//     'submitQuestion': function(ipaddress, question, scr, stat, d){
+//         Questions.insert({ IP: ipaddress, content: question,
+//             score: scr, status: stat, date: d });
+//     },
+//     'changeQuestionStatus': function(questionID, stat){
+//         Questions.update({ _id: questionID }, { $set: {status:stat} });        
+//     },
+//     'setScore': function(questionID, score){
+//         Questions.update({ _id: questionID }, { $inc:score });
+//     },
+//     'recordLog': function(time, name, statechange){
+//         Log.insert({ timestamp: time, student: name, log: statechange });
+//     }
+// });

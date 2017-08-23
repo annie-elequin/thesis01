@@ -1,19 +1,7 @@
 <head>
     <title>Lecture</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $("#thing").click(function(){
-                $.get("studentID", function(data, status){
-                    alert("data: "+data+"\nStatus: "+status);
-                });
-            });
-        });
-    </script>
 </head>
 <body onbeforeunload="inactiveFunction();">
-    <button class="thing">here is a button</button>
-    <!-- <h1>Welcome, <span id="name"></span>!</h1> -->
     <p><span style="float:left;">{{> statusbuttons}}</span></p>
     <br /><br />
     {{> classroomlayout }}
@@ -21,7 +9,6 @@
 </body>
 
 <template name="statusbuttons">
-    {{getname}}
     <button class="badbtn">Stop</button>
     <button class="mehbtn">Slow Down</button>
     <button class="goodbtn">Good</button>
