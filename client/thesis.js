@@ -182,11 +182,11 @@ if(Meteor.isClient){
             return Questions.find({ status: "active", date: {$gt: today} }, { sort: {score:-1} });
         },
         'professor': function(){
-            console.log("is this the prof?");
+            // console.log("is this the prof?");
             var seatID = Session.get('selectedSeat');
             if(seatID){
                 var curSeat = SeatList.findOne({ _id: seatID});
-                console.log(curSeat);
+                // console.log(curSeat);
                 if(curSeat.IP == "129.62.150.10"){
                     return true;
                 }else{
