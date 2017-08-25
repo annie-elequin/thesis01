@@ -1,7 +1,8 @@
 import { SeatList } from '/imports/api/SeatList';
 import { Questions } from '/imports/api/Questions';
 import { Log } from '/imports/api/Log';
-import { HTTP } from 'meteor/http'
+import { HTTP } from 'meteor/http';
+import { Meteor } from 'meteor/meteor';
 
 if(Meteor.isClient){
     Meteor.subscribe('seats');
@@ -21,6 +22,18 @@ if(Meteor.isClient){
         }
     }
 
+    // client code: ping heartbeat every 5 seconds
+    Meteor.setInterval(function () {
+        Meteor.call('keepalive', Session.get('selectedSeat'));
+    }, 5000);
+
+    Meteor.setInterval(function () {
+        var now = (new Date()).getTime();
+        SeatList.find({lastseen: {$lt: (now - 60 * 1000)}}).forEach(function (user) {
+            Meteor.call('changeStatus', user._id, "inactive");
+        });
+    }, 3600000);
+
     Template.classroomlayout.helpers({
         'getIP': function(){
             // console.log("getip");
@@ -31,13 +44,11 @@ if(Meteor.isClient){
             }, "jsonp");
 
             var curIP = Session.get('curIP');
-            var postData = {
-                data: {
-                    "IP_Address": curIP,
-                }
-            }
+            console.log("ip: "+curIP);
+            var url = "https://csi-info.baylor.edu/upload/getUserID.php?IP_Address='"+curIP+"'";
+            console.log("url: "+url);
 
-            HTTP.post('https://csi-info.baylor.edu/upload/getUserID.php', postData,
+            HTTP.get(url,
                 function( error, response ) {
                 if ( error ) {
                     console.log("super didn't work");
@@ -45,20 +56,6 @@ if(Meteor.isClient){
                 } else {
                     console.log("worked!");
                   console.log( response );
-                  /*
-                   This will return the HTTP response object that looks something like this:
-                   {
-                     content: "String of content...",
-                     data: {
-                       "id": 101,
-                       "title": "Title of our new post",
-                       "body": "Body of our new post",
-                       "userId": 1337
-                     },
-                     headers: {  Object containing HTTP response headers }
-                     statusCode: 201
-                   }
-                  */
                 }
               });
         },
@@ -178,7 +175,7 @@ if(Meteor.isClient){
     Template.questions.helpers({
         'question': function(){
             var today = new Date();
-            today.setHours(8,0,0,0);
+            today.setHours(0,0,0,0);
             return Questions.find({ status: "active", date: {$gt: today} }, { sort: {score:-1} });
         },
         'professor': function(){
@@ -294,12 +291,6 @@ if(Meteor.isClient){
         }
     });
 
-    Template.body.events({
-        'submit .new-user': function(event){
-            var name = event.target.studentID.value;
-        }
-    });
-
 }
 
 if(Meteor.isServer){
@@ -312,37 +303,4 @@ if(Meteor.isServer){
     Meteor.publish('log', function(){
         return Log.find();
     });
-
-    // Meteor.methods({
-    //     'httpGETNAME': function(){
-    //         HTTP.call('GET', 'http://anyorigin.com/go?url=https%3A//csi-info.baylor.edu/upload/course.php&callback=?', {}, function(error,response){
-    //             if(error){
-    //                 console.log('http get FAILED');
-    //                 console.log(error);
-    //             }else{
-    //                 console.log('http get success');
-    //                 console.log(response);
-    //             }
-    //         });
-    //     }
-    // });
 }
-
-// Meteor.methods({
-//     'changeStatus': function(studID, stat){
-//         SeatList.update({_id: studID}, {$set:{status:stat}});
-//     },
-//     'submitQuestion': function(ipaddress, question, scr, stat, d){
-//         Questions.insert({ IP: ipaddress, content: question,
-//             score: scr, status: stat, date: d });
-//     },
-//     'changeQuestionStatus': function(questionID, stat){
-//         Questions.update({ _id: questionID }, { $set: {status:stat} });        
-//     },
-//     'setScore': function(questionID, score){
-//         Questions.update({ _id: questionID }, { $inc:score });
-//     },
-//     'recordLog': function(time, name, statechange){
-//         Log.insert({ timestamp: time, student: name, log: statechange });
-//     }
-// });

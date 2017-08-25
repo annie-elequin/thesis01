@@ -11,8 +11,7 @@ Meteor.methods({
         Log.insert({ date: today, student: studID, change: stateChange });
     },
     'submitQuestion': function(seatID, ipaddress, question, scr, stat, d){
-        Questions.insert({ IP: ipaddress, content: question,
-            score: scr, status: stat, date: d });
+        Questions.insert({ IP: ipaddress, content: question, score: scr, status: stat, date: d });
 
         var today = Date();
         var stateChange = "Submitted question: "+question;
@@ -25,16 +24,19 @@ Meteor.methods({
         var stateChange = "Question "+questionID+" status changed to: "+stat;
         Log.insert({ date: today, student: seatID, change: stateChange });      
     },
-    'setScore': function(seatID, questionID, score){
-        Questions.update({ _id: questionID }, { $inc:score });
+    'setScore': function(seatID, questionID, scr){
+        Questions.update({ _id: questionID }, { $inc:{score:scr} });
 
         var today = Date();
         var stateChange = "Question "+questionID;
-        if(score > 0){
+        if(scr > 0){
             stateChange += " voted UP.";
         }else{
             stateChange += " voted DOWN.";
         }
         Log.insert({ date: today, student: seatID, change: stateChange });
+    },
+    'keepalive': function(seatID) {    
+        SeatList.update({_id: seatID}, {$set: {lastseen: (new Date()).getTime()}});
     }
 });
